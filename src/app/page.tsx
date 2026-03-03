@@ -50,7 +50,7 @@ export default function HomePage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border-2 border-main text-main px-8 py-3 text-sm font-bold tracking-wide hover:bg-main hover:text-white transition-colors"
           >
-            ファーストリーフ 公式サイトを見る
+            ファーストリーフについて
             <ChevronRight className="w-4 h-4" />
           </a>
         </div>

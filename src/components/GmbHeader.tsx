@@ -27,7 +27,7 @@ export function GmbHeader() {
             rel="noopener noreferrer"
             className="hidden sm:flex items-center gap-1 border border-main text-main px-3 py-2 text-[11px] font-semibold tracking-wide hover:bg-main hover:text-white transition-colors"
           >
-            公式サイト
+            ファーストリーフについて
           </a>
           <a
             href={SITE.phoneTel}

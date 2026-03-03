@@ -6,5 +6,5 @@ export const SITE = {
   phoneLabel: "24時間365日受付・通話無料",
   address: "〒253-0085 神奈川県茅ヶ崎市矢畑682-10",
   copy: "葬儀社を、決める前に。",
-  lpUrl: "https://firstleaf-site.vercel.app",
+  lpUrl: "https://first-leaf.jp/",
 } as const;
