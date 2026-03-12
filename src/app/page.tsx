@@ -25,7 +25,7 @@ export default function HomePage() {
       {/* Plan cards */}
       <section className="bg-base pb-section">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-px bg-border-light">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-px bg-border-light">
             {plans.map((plan) => (
               <PlanCard key={plan.id} plan={plan} />
             ))}

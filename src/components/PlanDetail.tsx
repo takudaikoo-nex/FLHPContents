@@ -1,8 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import {
   Check,
   X,
   ChevronRight,
+  ChevronDown,
   Wallet,
   UserX,
   Clock,
@@ -32,6 +36,30 @@ const iconMap: Record<string, React.ElementType> = {
   ribbon: Ribbon,
 };
 
+function Accordion({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border-light">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-surface hover:bg-base-warm transition-colors text-left"
+      >
+        <span className="text-sm font-semibold text-ink">{title}</span>
+        <ChevronDown
+          className={`w-4 h-4 text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && <div className="px-4 pb-4 pt-2 bg-surface">{children}</div>}
+    </div>
+  );
+}
+
 export function PlanDetail({ plan }: { plan: Plan }) {
   const otherPlans = getOtherPlans(plan.slug);
 
@@ -58,11 +86,11 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </div>
 
-      {/* Price + Target */}
+      {/* Price + Target — LP-like simple section */}
       <section className="bg-surface py-10">
         <div className="max-w-3xl mx-auto px-6">
           {/* Price block */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <div className="flex items-baseline justify-center gap-2 mb-1">
               <span className="text-5xl sm:text-6xl font-bold text-ink">
                 {plan.priceNum}
@@ -71,12 +99,22 @@ export function PlanDetail({ plan }: { plan: Plan }) {
             </div>
             <p className="text-xs text-ink-muted">{plan.priceTaxIn}</p>
             <p className="mt-1 text-[11px] text-ink-muted">
-              ※地域・条件により変動する場合があります
+              ※火葬料・搬送料など地域により変動する費用は別途かかります
+            </p>
+          </div>
+
+          {/* Why this price */}
+          <div className="bg-main-faint px-5 py-4 mb-8 border-l-4 border-main">
+            <h2 className="text-xs font-bold text-main tracking-wider mb-2">
+              なぜこの価格？
+            </h2>
+            <p className="text-sm text-ink-secondary leading-relaxed">
+              {plan.whyThisPrice}
             </p>
           </div>
 
           {/* Targets */}
-          <div className="mb-10">
+          <div className="mb-8">
             <h2 className="text-xs font-semibold text-main tracking-wider uppercase mb-4 text-center">
               こんな方におすすめ
             </h2>
@@ -103,39 +141,44 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* Included services */}
+      {/* Mid CTA — early placement */}
+      <div className="bg-base-warm py-8">
+        <PhoneCta label="このプランについて相談する" />
+      </div>
+
+      {/* Included services — ACCORDION (collapsed by default) */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-base font-bold text-ink mb-6 flex items-center gap-2">
+          <h2 className="text-base font-bold text-ink mb-4 flex items-center gap-2">
             <span className="w-1 h-6 bg-main inline-block" />
             プランに含まれるもの
           </h2>
-          <div className="space-y-6">
+          <p className="text-xs text-ink-muted mb-4">
+            タップで詳細を表示できます
+          </p>
+          <div className="space-y-2">
             {plan.includes.map((group) => (
-              <div key={group.category}>
-                <h3 className="text-xs font-semibold text-ink-secondary tracking-wider mb-2 border-b border-border pb-2">
-                  {group.category}
-                </h3>
+              <Accordion key={group.category} title={group.category}>
                 <div className="grid sm:grid-cols-2 gap-1.5">
                   {group.items.map((item) => (
                     <div
                       key={item}
-                      className="flex items-center gap-2 bg-surface px-4 py-3 border border-border-light"
+                      className="flex items-center gap-2 bg-base px-4 py-3 border border-border-light"
                     >
                       <Check className="w-4 h-4 text-main shrink-0" />
                       <span className="text-sm">{item}</span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Accordion>
             ))}
           </div>
 
           {/* Not included */}
           {plan.notIncluded.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-border">
+            <div className="mt-6 pt-4 border-t border-border">
               <h3 className="text-xs font-semibold text-ink-muted tracking-wider mb-3">
-                このプランに含まれないもの
+                このプランに含まれないもの（別途費用）
               </h3>
               <div className="flex flex-wrap gap-2">
                 {plan.notIncluded.map((item) => (
@@ -153,11 +196,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* Mid CTA */}
-      <div className="bg-surface py-10">
-        <PhoneCta label="このプランについて相談する" />
-      </div>
-
       {/* Flow */}
       <section className="bg-base-cool py-section">
         <div className="max-w-3xl mx-auto px-6">
@@ -168,7 +206,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
           <div className="space-y-0">
             {plan.flow.map((f, i) => (
               <div key={f.step} className="flex gap-4">
-                {/* Timeline */}
                 <div className="flex flex-col items-center">
                   <div className="w-10 h-10 bg-main text-white flex items-center justify-center text-xs font-bold shrink-0">
                     {f.step}
@@ -177,7 +214,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                     <div className="w-px flex-1 bg-border min-h-[40px]" />
                   )}
                 </div>
-                {/* Content */}
                 <div className="pb-8">
                   <h3 className="text-sm font-bold mb-1">{f.title}</h3>
                   <p className="text-xs text-ink-secondary leading-relaxed">
@@ -206,7 +242,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   </span>
                   <span className="text-sm font-bold">{item.q}</span>
                 </div>
-                <div className="flex items-start gap-3 pl-0 sm:pl-0">
+                <div className="flex items-start gap-3">
                   <span className="text-sm font-bold text-accent-dark shrink-0">
                     A.
                   </span>
