@@ -45,17 +45,25 @@ function Accordion({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-border-light">
+    <div className="border border-border-light overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-surface hover:bg-base-warm transition-colors text-left"
+        className="w-full flex items-center justify-between px-5 py-4 bg-surface hover:bg-base-warm transition-colors text-left"
       >
         <span className="text-sm font-semibold text-ink">{title}</span>
         <ChevronDown
-          className={`w-4 h-4 text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-main transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && <div className="px-4 pb-4 pt-2 bg-surface">{children}</div>}
+      <div
+        className={`grid transition-all duration-300 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+      >
+        <div className="overflow-hidden">
+          <div className="px-5 pb-4 pt-2 bg-surface">
+            {children}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -65,8 +73,8 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
   return (
     <>
-      {/* Hero */}
-      <div className="relative h-[280px] sm:h-[360px] overflow-hidden">
+      {/* ============ HERO / FV ============ */}
+      <div className="relative h-[380px] sm:h-[440px] overflow-hidden">
         <Image
           src={plan.heroImage}
           alt={plan.title}
@@ -75,37 +83,83 @@ export function PlanDetail({ plan }: { plan: Plan }) {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/30 to-dark/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/40 to-dark/10" />
         <div className="absolute inset-0 flex flex-col justify-end pb-8 px-6 max-w-5xl mx-auto">
           <div className="text-[10px] tracking-[0.15em] text-white/60 uppercase mb-2">
             {plan.num}
           </div>
-          <h1 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold text-white leading-tight">
+          <h1 className="text-[clamp(1.5rem,5vw,2.8rem)] font-bold text-white leading-tight mb-4">
             {plan.title}
           </h1>
+          {/* Price badge on hero */}
+          <div className="inline-flex items-baseline gap-2 bg-white/95 backdrop-blur-sm px-6 py-3 w-fit shadow-lg">
+            <span className="text-4xl sm:text-5xl font-bold text-ink">
+              {plan.priceNum}
+            </span>
+            <span className="text-base text-ink-secondary font-semibold">
+              万円台〜
+            </span>
+            <span className="text-[11px] text-ink-muted ml-1">
+              {plan.priceTaxIn}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Price + Target — LP-like simple section */}
-      <section className="bg-surface py-10">
+      {/* ============ SECTION: こんな方におすすめ ============ */}
+      <section className="bg-surface py-10 border-b-4 border-main">
         <div className="max-w-3xl mx-auto px-6">
-          {/* Price block */}
-          <div className="text-center mb-8">
-            <div className="flex items-baseline justify-center gap-2 mb-1">
-              <span className="text-5xl sm:text-6xl font-bold text-ink">
-                {plan.priceNum}
-              </span>
-              <span className="text-lg text-ink-secondary">万円台〜</span>
+          <h2 className="text-base font-bold text-ink mb-6 text-center">
+            こんな方におすすめ
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {plan.targets.map((t) => {
+              const Icon = iconMap[t.icon] || Heart;
+              return (
+                <div
+                  key={t.text}
+                  className="flex items-start gap-3 bg-main-faint border-l-4 border-main px-4 py-5"
+                >
+                  <Icon className="w-6 h-6 text-main shrink-0 mt-0.5" />
+                  <span className="text-sm leading-snug font-medium">
+                    {t.text}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ CTA 1 ============ */}
+      <div className="bg-dark text-dark-text py-10">
+        <PhoneCta label="落ち着いてお電話ください" dark />
+      </div>
+
+      {/* ============ SECTION: なぜこの価格？ + 説明 ============ */}
+      <section className="bg-base py-section">
+        <div className="max-w-3xl mx-auto px-6">
+          {/* Image + description side by side */}
+          <div className="grid sm:grid-cols-2 gap-8 mb-10">
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <Image
+                src={plan.image}
+                alt={`${plan.title}のイメージ`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 50vw"
+              />
             </div>
-            <p className="text-xs text-ink-muted">{plan.priceTaxIn}</p>
-            <p className="mt-1 text-[11px] text-ink-muted">
-              ※火葬料・搬送料など地域により変動する費用は別途かかります
-            </p>
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-ink-secondary leading-[1.9]">
+                {plan.longDescription}
+              </p>
+            </div>
           </div>
 
           {/* Why this price */}
-          <div className="bg-main-faint px-5 py-4 mb-8 border-l-4 border-main">
-            <h2 className="text-xs font-bold text-main tracking-wider mb-2">
+          <div className="bg-surface border-l-4 border-accent px-6 py-5">
+            <h2 className="text-sm font-bold text-ink mb-2">
               なぜこの価格？
             </h2>
             <p className="text-sm text-ink-secondary leading-relaxed">
@@ -113,53 +167,32 @@ export function PlanDetail({ plan }: { plan: Plan }) {
             </p>
           </div>
 
-          {/* Targets */}
-          <div className="mb-8">
-            <h2 className="text-xs font-semibold text-main tracking-wider uppercase mb-4 text-center">
-              こんな方におすすめ
-            </h2>
-            <div className="grid sm:grid-cols-3 gap-3">
-              {plan.targets.map((t) => {
-                const Icon = iconMap[t.icon] || Heart;
-                return (
-                  <div
-                    key={t.text}
-                    className="flex items-start gap-3 bg-main-faint px-4 py-4"
-                  >
-                    <Icon className="w-5 h-5 text-main shrink-0 mt-0.5" />
-                    <span className="text-sm leading-snug">{t.text}</span>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Separate costs notice */}
+          <div className="mt-4 text-[11px] text-ink-muted bg-base-warm px-4 py-3 flex items-start gap-2">
+            <Info className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>
+              火葬料・搬送料など地域により変動する費用は別途かかります。事前にお見積りをご提示し、ご納得いただいてから進めます。
+            </span>
           </div>
-
-          {/* Description */}
-          <p className="text-sm text-ink-secondary leading-[1.9] mb-0">
-            {plan.longDescription}
-          </p>
         </div>
       </section>
 
-      {/* Mid CTA — early placement */}
-      <div className="bg-base-warm py-8">
-        <PhoneCta label="このプランについて相談する" />
-      </div>
-
-      {/* Included services — ACCORDION (collapsed by default) */}
-      <section className="bg-base py-section">
+      {/* ============ SECTION: プランに含まれるもの (accordion) ============ */}
+      <section className="bg-surface py-section border-t-2 border-border">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-base font-bold text-ink mb-4 flex items-center gap-2">
-            <span className="w-1 h-6 bg-main inline-block" />
-            プランに含まれるもの
-          </h2>
-          <p className="text-xs text-ink-muted mb-4">
-            タップで詳細を表示できます
+          <div className="flex items-center gap-3 mb-2">
+            <span className="w-1.5 h-8 bg-main inline-block" />
+            <h2 className="text-lg font-bold text-ink">
+              プランに含まれるもの
+            </h2>
+          </div>
+          <p className="text-xs text-ink-muted mb-6 ml-4">
+            各カテゴリをタップして詳細を確認できます
           </p>
           <div className="space-y-2">
             {plan.includes.map((group) => (
               <Accordion key={group.category} title={group.category}>
-                <div className="grid sm:grid-cols-2 gap-1.5">
+                <div className="grid sm:grid-cols-2 gap-2">
                   {group.items.map((item) => (
                     <div
                       key={item}
@@ -176,15 +209,15 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
           {/* Not included */}
           {plan.notIncluded.length > 0 && (
-            <div className="mt-6 pt-4 border-t border-border">
-              <h3 className="text-xs font-semibold text-ink-muted tracking-wider mb-3">
-                このプランに含まれないもの（別途費用）
+            <div className="mt-8 pt-6 border-t border-border">
+              <h3 className="text-xs font-bold text-ink-muted tracking-wider mb-3 uppercase">
+                別途費用が必要なもの
               </h3>
               <div className="flex flex-wrap gap-2">
                 {plan.notIncluded.map((item) => (
                   <span
                     key={item}
-                    className="inline-flex items-center gap-1 text-xs px-3 py-1.5 bg-base-warm text-ink-muted"
+                    className="inline-flex items-center gap-1 text-xs px-3 py-2 bg-base-warm text-ink-muted border border-border-light"
                   >
                     <X className="w-3 h-3" />
                     {item}
@@ -196,27 +229,34 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* Flow */}
-      <section className="bg-base-cool py-section">
+      {/* ============ CTA 2 ============ */}
+      <div className="bg-main-faint py-10 border-y-2 border-main/20">
+        <PhoneCta label="お見積り・ご相談は無料です" />
+      </div>
+
+      {/* ============ SECTION: ご葬儀の流れ ============ */}
+      <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-base font-bold text-ink mb-8 flex items-center gap-2">
-            <span className="w-1 h-6 bg-accent inline-block" />
-            ご葬儀の流れ
-          </h2>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="w-1.5 h-8 bg-accent inline-block" />
+            <h2 className="text-lg font-bold text-ink">ご葬儀の流れ</h2>
+          </div>
           <div className="space-y-0">
             {plan.flow.map((f, i) => (
-              <div key={f.step} className="flex gap-4">
+              <div key={f.step} className="flex gap-5">
+                {/* Timeline */}
                 <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 bg-main text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  <div className="w-12 h-12 bg-main text-white flex items-center justify-center text-sm font-bold shrink-0">
                     {f.step}
                   </div>
                   {i < plan.flow.length - 1 && (
-                    <div className="w-px flex-1 bg-border min-h-[40px]" />
+                    <div className="w-px flex-1 bg-main/20 min-h-[48px]" />
                   )}
                 </div>
-                <div className="pb-8">
-                  <h3 className="text-sm font-bold mb-1">{f.title}</h3>
-                  <p className="text-xs text-ink-secondary leading-relaxed">
+                {/* Content */}
+                <div className="pb-10">
+                  <h3 className="text-base font-bold mb-1">{f.title}</h3>
+                  <p className="text-sm text-ink-secondary leading-relaxed">
                     {f.desc}
                   </p>
                 </div>
@@ -226,27 +266,29 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="bg-base py-section">
+      {/* ============ SECTION: よくあるご質問 ============ */}
+      <section className="bg-surface py-section border-t-2 border-border">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-base font-bold text-ink mb-6 flex items-center gap-2">
-            <span className="w-1 h-6 bg-main inline-block" />
-            よくあるご質問
-          </h2>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="w-1.5 h-8 bg-main inline-block" />
+            <h2 className="text-lg font-bold text-ink">よくあるご質問</h2>
+          </div>
           <div className="divide-y divide-border">
             {plan.faq.map((item) => (
-              <div key={item.q} className="py-5">
-                <div className="flex items-start gap-3 mb-2">
-                  <span className="text-sm font-bold text-main shrink-0">
-                    Q.
+              <div key={item.q} className="py-6">
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-base font-bold text-white bg-main w-7 h-7 flex items-center justify-center shrink-0 text-xs">
+                    Q
                   </span>
-                  <span className="text-sm font-bold">{item.q}</span>
+                  <span className="text-sm font-bold leading-relaxed pt-0.5">
+                    {item.q}
+                  </span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-sm font-bold text-accent-dark shrink-0">
-                    A.
+                  <span className="text-base font-bold text-white bg-accent w-7 h-7 flex items-center justify-center shrink-0 text-xs">
+                    A
                   </span>
-                  <span className="text-sm text-ink-secondary leading-relaxed">
+                  <span className="text-sm text-ink-secondary leading-relaxed pt-0.5">
                     {item.a}
                   </span>
                 </div>
@@ -256,7 +298,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* Notes */}
+      {/* ============ SECTION: ご留意事項 ============ */}
       <section className="bg-base-warm py-8">
         <div className="max-w-3xl mx-auto px-6">
           <div className="flex items-center gap-2 mb-3">
@@ -278,7 +320,12 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* LP Banner */}
+      {/* ============ CTA 3 (bottom) ============ */}
+      <div className="bg-dark text-dark-text py-12">
+        <PhoneCta label="まずはお気軽にご相談ください" dark />
+      </div>
+
+      {/* ============ LP Banner ============ */}
       <section className="bg-surface py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="text-xs text-ink-secondary mb-4">
@@ -296,12 +343,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* Phone CTA */}
-      <div className="bg-dark text-dark-text py-12">
-        <PhoneCta label="まずはお気軽にご相談ください" dark />
-      </div>
-
-      {/* Other plans */}
+      {/* ============ Other plans ============ */}
       <OtherPlans plans={otherPlans} />
     </>
   );

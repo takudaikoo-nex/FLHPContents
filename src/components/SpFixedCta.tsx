@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { SITE } from "@/lib/constants";
 import { PhoneIcon } from "@/components/PhoneIcon";
+import { Mail } from "lucide-react";
 
 export function SpFixedCta() {
   const [visible, setVisible] = useState(false);
@@ -14,14 +15,27 @@ export function SpFixedCta() {
   }, []);
 
   return (
-    <a
-      href={SITE.phoneTel}
-      className={`fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center gap-2 bg-cta text-white py-4 font-bold tracking-wide text-base lg:hidden transition-transform duration-300 ${
+    <div
+      className={`fixed bottom-0 left-0 right-0 z-50 flex lg:hidden transition-transform duration-300 ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      <PhoneIcon className="w-5 h-5" />
-      今すぐ電話で相談する
-    </a>
+      <a
+        href={SITE.phoneTel}
+        className="flex-1 flex items-center justify-center gap-2 bg-cta text-white py-4 font-bold tracking-wide text-sm"
+      >
+        <PhoneIcon className="w-5 h-5" />
+        電話で相談
+      </a>
+      <a
+        href={SITE.formUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex-1 flex items-center justify-center gap-2 bg-dark text-white py-4 font-bold tracking-wide text-sm border-l border-white/20"
+      >
+        <Mail className="w-5 h-5" />
+        メールで相談
+      </a>
+    </div>
   );
 }
