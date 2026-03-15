@@ -41,7 +41,7 @@ export function PhoneCta({
           }`}
         >
           <Mail className="w-5 h-5" />
-          メールで相談する
+          お問い合わせ
         </a>
       </div>
       <div

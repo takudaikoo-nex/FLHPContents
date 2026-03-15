@@ -34,7 +34,7 @@ export function SpFixedCta() {
         className="flex-1 flex items-center justify-center gap-2 bg-dark text-white py-4 font-bold tracking-wide text-sm border-l border-white/20"
       >
         <Mail className="w-5 h-5" />
-        メールで相談
+        お問い合わせ
       </a>
     </div>
   );
