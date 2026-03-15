@@ -82,63 +82,73 @@ export function PlanDetail({ plan }: { plan: Plan }) {
   return (
     <>
       {/* ============ HERO / FV ============ */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundColor: t.dark }}
-      >
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-            {/* FV Square Image (Canva 1080x1080) */}
-            <div className="w-[280px] sm:w-[340px] shrink-0">
-              <div className="relative aspect-square rounded-sm overflow-hidden shadow-2xl ring-1 ring-white/10">
+      <section className="relative overflow-hidden">
+        {/* Patterned wallpaper background for transparent PNG */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: t.light,
+            backgroundImage: `
+              radial-gradient(circle at 20% 50%, ${t.main}08 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, ${t.main}06 0%, transparent 40%),
+              radial-gradient(circle at 60% 80%, ${t.main}04 0%, transparent 60%),
+              linear-gradient(135deg, ${t.light} 0%, #fff 50%, ${t.light} 100%)
+            `,
+          }}
+        />
+        {/* Subtle geometric pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 20px),
+              repeating-linear-gradient(-45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 20px)
+            `,
+          }}
+        />
+        {/* Top accent line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1"
+          style={{ backgroundColor: t.main }}
+        />
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-4 items-center">
+            {/* Left: FV Product Image (transparent PNG, large with price inside) */}
+            <div className="flex justify-center">
+              <div className="relative w-[300px] sm:w-[400px] aspect-square drop-shadow-xl">
                 <Image
                   src={plan.fvImage}
-                  alt={`${plan.title} プラン概要`}
+                  alt={`${plan.title} プラン概要・料金`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority
-                  sizes="340px"
+                  sizes="(max-width: 640px) 300px, 400px"
                 />
               </div>
             </div>
 
-            {/* FV Text */}
-            <div className="text-center sm:text-left flex-1">
-              <div
-                className="inline-block text-[10px] tracking-[0.2em] uppercase font-bold px-3 py-1 rounded-full mb-3"
-                style={{
-                  backgroundColor: t.main,
-                  color: "#fff",
-                }}
-              >
-                {plan.num}
-              </div>
-              <h1 className="text-[clamp(1.6rem,5vw,2.6rem)] font-bold text-white leading-tight mb-3">
-                {plan.title}
-              </h1>
-              <p className="text-white/60 text-sm leading-relaxed mb-5">
-                {plan.description}
-              </p>
-              {/* Price badge */}
-              <div
-                className="inline-flex items-baseline gap-2 px-6 py-3 shadow-lg"
-                style={{ backgroundColor: t.light }}
-              >
-                <span
-                  className="text-4xl sm:text-5xl font-bold"
-                  style={{ color: t.dark }}
-                >
-                  {plan.priceNum}
-                </span>
-                <span
-                  className="text-base font-semibold"
-                  style={{ color: t.main }}
-                >
-                  万円台〜
-                </span>
-                <span className="text-[11px] ml-1 opacity-60" style={{ color: t.dark }}>
-                  {plan.priceTaxIn}
-                </span>
+            {/* Right: Hero photo (atmosphere image) */}
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-[440px] aspect-[4/3] overflow-hidden rounded-sm shadow-2xl">
+                <Image
+                  src={plan.heroImage}
+                  alt={`${plan.title}のイメージ`}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 640px) 100vw, 440px"
+                />
+                {/* Dark gradient overlay with plan title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                    {plan.title}
+                  </h1>
+                  <p className="text-white/70 text-xs mt-1 leading-relaxed">
+                    {plan.description}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
