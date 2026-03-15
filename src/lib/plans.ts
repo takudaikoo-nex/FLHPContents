@@ -3,6 +3,17 @@ export interface IncludeGroup {
   items: string[];
 }
 
+export interface PlanTheme {
+  /** Canva main color e.g. "#C9902A" */
+  main: string;
+  /** Light tint for backgrounds */
+  light: string;
+  /** Dark shade for text / overlays */
+  dark: string;
+  /** Label shown in design notes */
+  label: string;
+}
+
 export interface Plan {
   id: string;
   slug: string;
@@ -22,6 +33,10 @@ export interface Plan {
   notes: string[];
   image: string;
   heroImage: string;
+  /** Canva FV image (square 1080x1080) — placed in /public/images/fv/ */
+  fvImage: string;
+  /** Per-plan color theme from Canva memo */
+  theme: PlanTheme;
 }
 
 export const plans: Plan[] = [
@@ -124,6 +139,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/S__58425360_0.jpg",
     heroImage: "/images/S__58425357_0.jpg",
+    fvImage: "/images/fv/plan01-simple.png",
+    theme: { main: "#5C5C5C", light: "#F0F0F0", dark: "#222222", label: "静粛・最小限" },
   },
 
   /* ──────────────────── PLAN 02 ──────────────────── */
@@ -233,6 +250,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/S__58425359_0.jpg",
     heroImage: "/images/S__58425365_0.jpg",
+    fvImage: "/images/fv/plan02-menkai.png",
+    theme: { main: "#C9902A", light: "#FFF8E7", dark: "#1A1A1A", label: "格調・シンプル" },
   },
 
   /* ──────────────────── PLAN 03 ──────────────────── */
@@ -336,6 +355,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/S__58425374_0.jpg",
     heroImage: "/images/S__58425361_0.jpg",
+    fvImage: "/images/fv/plan03-owakare.png",
+    theme: { main: "#C9902A", light: "#FFF8E7", dark: "#1A1A1A", label: "格調・シンプル" },
   },
 
   /* ──────────────────── PLAN 04 ──────────────────── */
@@ -446,6 +467,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/S__58425360_0.jpg",
     heroImage: "/images/S__58425357_0.jpg",
+    fvImage: "/images/fv/plan04-oneday.png",
+    theme: { main: "#4A7C59", light: "#EAF3EC", dark: "#1A2B1F", label: "自然・安らぎ" },
   },
 
   /* ──────────────────── PLAN 05 ──────────────────── */
@@ -556,6 +579,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/大石さん宣材写真8.jpg",
     heroImage: "/images/大石さん宣材写真8.jpg",
+    fvImage: "/images/fv/plan05-home.png",
+    theme: { main: "#7B5EA7", light: "#EDE8F5", dark: "#1A0F2E", label: "上品・プライベート" },
   },
 
   /* ──────────────────── PLAN 06 ──────────────────── */
@@ -677,6 +702,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/大石さん宣材写真53.jpg",
     heroImage: "/images/大石さん宣材写真53.jpg",
+    fvImage: "/images/fv/plan06-ownhall.png",
+    theme: { main: "#1A3A5C", light: "#E8EEF5", dark: "#0A1628", label: "格式・法人向け" },
   },
 
   /* ──────────────────── PLAN 07 ──────────────────── */
@@ -795,6 +822,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/S__58425374_0.jpg",
     heroImage: "/images/S__58425361_0.jpg",
+    fvImage: "/images/fv/plan07-family.png",
+    theme: { main: "#2A6DB5", light: "#E8F0FB", dark: "#0D1B2A", label: "信頼・落ち着き" },
   },
 
   /* ──────────────────── PLAN 08 ──────────────────── */
@@ -921,6 +950,8 @@ export const plans: Plan[] = [
     ],
     image: "/images/前半パート_24.jpg",
     heroImage: "/images/後半パート_3.jpg",
+    fvImage: "/images/fv/plan08-twoday.png",
+    theme: { main: "#8B1A1A", light: "#F5E8E8", dark: "#1A0A0A", label: "伝統・荘厳" },
   },
 ];
 
