@@ -84,30 +84,17 @@ function InlineCta({
 /* ── Section Title ── */
 function SectionTitle({
   children,
-  sub,
-  accentColor,
 }: {
   children: React.ReactNode;
-  sub?: string;
-  accentColor: string;
 }) {
   return (
-    <div className="mb-8">
-      <div className="flex items-center gap-3 mb-1">
-        <span
-          className="w-1 h-10 inline-block"
-          style={{ backgroundColor: accentColor }}
-        />
-        <h2
-          className="text-xl sm:text-2xl font-bold tracking-wide"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          {children}
-        </h2>
-      </div>
-      {sub && (
-        <p className="text-xs text-ink-muted ml-4 mt-1">{sub}</p>
-      )}
+    <div className="mb-10 text-center">
+      <h2
+        className="text-2xl sm:text-3xl font-bold tracking-widest text-ink"
+        style={{ fontFamily: "var(--font-serif)" }}
+      >
+        {children}
+      </h2>
     </div>
   );
 }
@@ -127,17 +114,16 @@ function Accordion({
     <div className="border border-border-light overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 bg-surface hover:bg-base-warm transition-colors text-left"
+        className="w-full flex items-center justify-center gap-3 px-5 py-5 bg-surface hover:bg-base-warm transition-colors"
       >
-        <span className="text-sm font-semibold text-ink flex items-center gap-2">
-          <span
-            className="w-1 h-5 rounded-full inline-block shrink-0"
-            style={{ backgroundColor: accentColor }}
-          />
+        <span
+          className="text-base sm:text-lg font-bold text-ink text-center"
+          style={{ fontFamily: "var(--font-serif)" }}
+        >
           {title}
         </span>
         <ChevronDown
-          className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           style={{ color: accentColor }}
         />
       </button>
@@ -260,7 +246,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ SECTION: こんな方におすすめ ============ */}
       <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle accentColor={t.main}>
+          <SectionTitle>
             こんな方におすすめ
           </SectionTitle>
           <div className="grid sm:grid-cols-3 gap-4">
@@ -289,7 +275,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ SECTION: プランの特徴 ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle accentColor={t.main} sub="Features">
+          <SectionTitle>
             プランの特徴
           </SectionTitle>
           <div className="grid sm:grid-cols-2 gap-8 mb-10">
@@ -349,7 +335,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ SECTION: プランに含まれるもの ============ */}
       <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle accentColor={t.main} sub="Inclusions">
+          <SectionTitle>
             プランに含まれるもの
           </SectionTitle>
           <div className="space-y-2">
@@ -412,7 +398,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ SECTION: ご葬儀の流れ ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle accentColor={t.main} sub="Flow">
+          <SectionTitle>
             ご葬儀の流れ
           </SectionTitle>
           <div className="space-y-0">
@@ -452,7 +438,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ SECTION: よくあるご質問 ============ */}
       <section className="bg-surface py-section border-t border-border">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle accentColor={t.main} sub="FAQ">
+          <SectionTitle>
             よくあるご質問
           </SectionTitle>
           <div className="divide-y divide-border">
