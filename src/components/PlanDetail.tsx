@@ -499,9 +499,16 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       </section>
 
       {/* ============ LP Banner ============ */}
-      <section className="bg-surface py-10">
+      <section className="bg-surface py-12">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="text-xs text-ink-secondary mb-4">
+          <Image
+            src="/images/logo.png"
+            alt="ファーストリーフ"
+            width={120}
+            height={120}
+            className="mx-auto mb-4"
+          />
+          <p className="text-sm text-ink-secondary mb-5">
             斎場案内・会社概要・トータルサポートなど詳しい情報はこちら
           </p>
           <a

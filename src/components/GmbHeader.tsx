@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SITE } from "@/lib/constants";
 import { PhoneIcon } from "@/components/PhoneIcon";
 
@@ -6,18 +7,15 @@ export function GmbHeader() {
   return (
     <header className="bg-surface border-b border-border-light px-6 py-3">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 no-underline">
-          <div className="w-9 h-9 bg-main flex items-center justify-center text-white text-base font-bold">
-            一
-          </div>
-          <div>
-            <div className="text-sm font-bold tracking-wider text-ink">
-              ファーストリーフ
-            </div>
-            <div className="text-[9px] tracking-[0.12em] text-ink-muted uppercase">
-              FIRST LEAF Inc.
-            </div>
-          </div>
+        <Link href="/" className="flex items-center no-underline">
+          <Image
+            src="/images/logoFL.png"
+            alt="ファーストリーフ"
+            width={180}
+            height={51}
+            className="h-10 w-auto"
+            priority
+          />
         </Link>
 
         <div className="flex items-center gap-2">
