@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import { GmbHeader } from "@/components/GmbHeader";
 import { GmbFooter } from "@/components/GmbFooter";
 import { SpFixedCta } from "@/components/SpFixedCta";
@@ -9,6 +9,13 @@ const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const notoSerifJP = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -25,7 +32,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang="ja" className={`${notoSansJP.variable} ${notoSerifJP.variable}`}>
       <body>
         <GmbHeader />
         <main>{children}</main>

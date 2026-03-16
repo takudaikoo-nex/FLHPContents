@@ -72,7 +72,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -84,6 +84,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "式場利用料",
       "通夜式・告別式",
       "祭壇・生花装飾",
@@ -183,7 +184,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -195,6 +196,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "式場利用料",
       "通夜式・告別式",
       "祭壇・生花装飾",
@@ -294,7 +296,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -305,7 +307,7 @@ export const plans: Plan[] = [
         ],
       },
     ],
-    notIncluded: ["通夜式", "告別式での読経", "料理・返礼品"],
+    notIncluded: ["火葬料金（地域により異なる）", "通夜式", "告別式での読経", "料理・返礼品"],
     flow: [
       {
         step: "01",
@@ -401,7 +403,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -413,6 +415,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "通夜式",
       "料理・返礼品（別途実費）",
       "お布施・戒名料（宗派による）",
@@ -513,7 +516,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -526,6 +529,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "料理・返礼品（別途実費）",
       "お布施・戒名料（宗派による）",
     ],
@@ -627,7 +631,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -640,6 +644,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "料理・返礼品（別途実費）",
       "お布施・戒名料（宗派による）",
     ],
@@ -749,7 +754,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -763,6 +768,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "式場利用料（自社斎場以外の場合）",
       "料理・返礼品（別途実費）",
       "お布施・戒名料（宗派による）",
@@ -878,7 +884,7 @@ export const plans: Plan[] = [
       },
       {
         category: "火葬・収骨",
-        items: ["火葬料", "骨壺", "収骨"],
+        items: ["骨壺", "収骨"],
       },
       {
         category: "手続き・サポート",
@@ -891,6 +897,7 @@ export const plans: Plan[] = [
       },
     ],
     notIncluded: [
+      "火葬料金（地域により異なる）",
       "式場利用料（自社斎場以外の場合）",
       "料理・返礼品の実費",
       "お布施・戒名料（宗派による）",

@@ -17,10 +17,11 @@ import {
   Building,
   Ribbon,
   Info,
+  Phone,
+  Mail,
 } from "lucide-react";
 import type { Plan } from "@/lib/plans";
 import { SITE } from "@/lib/constants";
-import { PhoneCta } from "@/components/PhoneCta";
 import { OtherPlans } from "@/components/OtherPlans";
 import { getOtherPlans } from "@/lib/plans";
 
@@ -36,6 +37,82 @@ const iconMap: Record<string, React.ElementType> = {
   ribbon: Ribbon,
 };
 
+/* ── Inline CTA (電話+フォーム 2ボタン) ── */
+function InlineCta({
+  label,
+  dark,
+  accentColor,
+}: {
+  label: string;
+  dark?: boolean;
+  accentColor?: string;
+}) {
+  const bg = dark ? "bg-transparent" : "";
+  const textColor = dark ? "text-white/70" : "text-ink-secondary";
+  return (
+    <div className={`${bg} text-center`}>
+      <p className={`text-xs ${textColor} mb-4 font-serif`}>{label}</p>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+        <a
+          href={SITE.phoneTel}
+          className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-cta hover:bg-cta-hover text-white font-bold text-base rounded-sm transition-colors shadow-lg"
+        >
+          <Phone className="w-5 h-5" />
+          {SITE.phone}
+        </a>
+        <a
+          href={SITE.formUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 border-2 font-bold text-sm rounded-sm transition-colors"
+          style={{
+            borderColor: dark ? "rgba(255,255,255,0.4)" : (accentColor || "#4A7C59"),
+            color: dark ? "#fff" : (accentColor || "#4A7C59"),
+          }}
+        >
+          <Mail className="w-4 h-4" />
+          お問い合わせ
+        </a>
+      </div>
+      <p className={`text-[10px] mt-3 ${dark ? "text-white/40" : "text-ink-muted"}`}>
+        24時間365日対応・相談無料
+      </p>
+    </div>
+  );
+}
+
+/* ── Section Title ── */
+function SectionTitle({
+  children,
+  sub,
+  accentColor,
+}: {
+  children: React.ReactNode;
+  sub?: string;
+  accentColor: string;
+}) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-1">
+        <span
+          className="w-1 h-10 inline-block"
+          style={{ backgroundColor: accentColor }}
+        />
+        <h2
+          className="text-xl sm:text-2xl font-bold tracking-wide"
+          style={{ fontFamily: "var(--font-serif)" }}
+        >
+          {children}
+        </h2>
+      </div>
+      {sub && (
+        <p className="text-xs text-ink-muted ml-4 mt-1">{sub}</p>
+      )}
+    </div>
+  );
+}
+
+/* ── Accordion ── */
 function Accordion({
   title,
   children,
@@ -83,69 +160,84 @@ export function PlanDetail({ plan }: { plan: Plan }) {
     <>
       {/* ============ HERO / FV ============ */}
       <section className="relative overflow-hidden">
-        {/* Patterned wallpaper background for transparent PNG */}
+        {/* Layered wallpaper background for transparent PNG product image */}
         <div
           className="absolute inset-0"
           style={{
-            backgroundColor: t.light,
-            backgroundImage: `
-              radial-gradient(circle at 20% 50%, ${t.main}08 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, ${t.main}06 0%, transparent 40%),
-              radial-gradient(circle at 60% 80%, ${t.main}04 0%, transparent 60%),
-              linear-gradient(135deg, ${t.light} 0%, #fff 50%, ${t.light} 100%)
+            background: `
+              radial-gradient(ellipse 120% 80% at 15% 50%, ${t.main}12 0%, transparent 70%),
+              radial-gradient(ellipse 100% 100% at 85% 20%, ${t.main}08 0%, transparent 60%),
+              radial-gradient(ellipse 80% 120% at 50% 90%, ${t.main}06 0%, transparent 50%),
+              linear-gradient(160deg, ${t.light} 0%, #FFFFFF 40%, ${t.light} 100%)
             `,
           }}
         />
-        {/* Subtle geometric pattern overlay */}
+        {/* Refined geometric pattern (subtle diamond lattice) */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 20px),
-              repeating-linear-gradient(-45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 20px)
+              repeating-linear-gradient(45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 24px),
+              repeating-linear-gradient(-45deg, ${t.dark} 0px, ${t.dark} 1px, transparent 1px, transparent 24px)
             `,
           }}
         />
-        {/* Top accent line */}
+        {/* Soft bokeh circles */}
         <div
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{ backgroundColor: t.main }}
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle 80px at 20% 30%, ${t.main}, transparent),
+              radial-gradient(circle 120px at 75% 70%, ${t.main}, transparent),
+              radial-gradient(circle 60px at 60% 15%, ${t.main}, transparent)
+            `,
+          }}
+        />
+        {/* Top accent bar */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1.5"
+          style={{
+            background: `linear-gradient(90deg, ${t.main}, ${t.main}88, ${t.main})`,
+          }}
         />
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-4 items-center">
-            {/* Left: FV Product Image (transparent PNG, large with price inside) */}
-            <div className="flex justify-center">
-              <div className="relative w-[300px] sm:w-[400px] aspect-square drop-shadow-xl">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-center">
+            {/* Left: Transparent PNG product image (large, with price baked in) */}
+            <div className="flex justify-center order-1">
+              <div className="relative w-[320px] sm:w-[440px] aspect-square drop-shadow-2xl">
                 <Image
                   src={plan.fvImage}
-                  alt={`${plan.title} プラン概要・料金`}
+                  alt={`${plan.title} プラン概要`}
                   fill
                   className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 300px, 400px"
+                  sizes="(max-width: 640px) 320px, 440px"
                 />
               </div>
             </div>
 
-            {/* Right: Hero photo (atmosphere image) */}
-            <div className="flex justify-center">
-              <div className="relative w-full max-w-[440px] aspect-[4/3] overflow-hidden rounded-sm shadow-2xl">
+            {/* Right: Hero atmosphere photo */}
+            <div className="flex justify-center order-2">
+              <div className="relative w-full max-w-[480px] aspect-[4/3] overflow-hidden shadow-2xl">
                 <Image
                   src={plan.heroImage}
                   alt={`${plan.title}のイメージ`}
                   fill
                   className="object-cover"
                   priority
-                  sizes="(max-width: 640px) 100vw, 440px"
+                  sizes="(max-width: 640px) 100vw, 480px"
                 />
-                {/* Dark gradient overlay with plan title */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                {/* Gradient overlay with plan title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h1
+                    className="text-2xl sm:text-3xl font-bold text-white leading-tight tracking-wide"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
                     {plan.title}
                   </h1>
-                  <p className="text-white/70 text-xs mt-1 leading-relaxed">
+                  <p className="text-white/80 text-sm mt-2 leading-relaxed">
                     {plan.description}
                   </p>
                 </div>
@@ -157,38 +249,28 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 1 (FV直後) ============ */}
       <section
-        className="py-8 border-b-2"
+        className="py-8"
         style={{
-          backgroundColor: t.light,
-          borderColor: `${t.main}33`,
+          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}EE 100%)`,
         }}
       >
-        <PhoneCta label="まずはお気軽にご相談ください" />
+        <InlineCta label="まずはお気軽にご相談ください" dark accentColor={t.main} />
       </section>
 
       {/* ============ SECTION: こんな方におすすめ ============ */}
-      <section className="bg-surface py-10">
+      <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-6">
-            <span
-              className="w-1.5 h-8 inline-block rounded-full"
-              style={{ backgroundColor: t.main }}
-            />
-            <h2 className="text-lg font-bold text-ink">
-              こんな方におすすめ
-            </h2>
-          </div>
+          <SectionTitle accentColor={t.main}>
+            こんな方におすすめ
+          </SectionTitle>
           <div className="grid sm:grid-cols-3 gap-4">
             {plan.targets.map((tgt) => {
               const Icon = iconMap[tgt.icon] || Heart;
               return (
                 <div
                   key={tgt.text}
-                  className="flex items-start gap-3 px-4 py-5 border-l-4"
-                  style={{
-                    backgroundColor: t.light,
-                    borderColor: t.main,
-                  }}
+                  className="flex items-start gap-3 px-5 py-6 border-l-4 bg-base-cool"
+                  style={{ borderColor: t.main }}
                 >
                   <Icon
                     className="w-6 h-6 shrink-0 mt-0.5"
@@ -204,11 +286,14 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* ============ SECTION: なぜこの価格？ + 説明 ============ */}
+      {/* ============ SECTION: プランの特徴 ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
+          <SectionTitle accentColor={t.main} sub="Features">
+            プランの特徴
+          </SectionTitle>
           <div className="grid sm:grid-cols-2 gap-8 mb-10">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm shadow-md">
+            <div className="relative aspect-[4/3] overflow-hidden shadow-lg">
               <Image
                 src={plan.image}
                 alt={`${plan.title}のイメージ`}
@@ -218,28 +303,34 @@ export function PlanDetail({ plan }: { plan: Plan }) {
               />
             </div>
             <div className="flex flex-col justify-center">
-              <p className="text-sm text-ink-secondary leading-[1.9]">
+              <p
+                className="text-base text-ink-secondary leading-[2.0]"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 {plan.longDescription}
               </p>
             </div>
           </div>
 
           <div
-            className="border-l-4 px-6 py-5 bg-surface"
+            className="border-l-4 px-6 py-6 bg-surface shadow-sm"
             style={{ borderColor: t.main }}
           >
-            <h2 className="text-sm font-bold text-ink mb-2">
-              なぜこの価格？
-            </h2>
+            <h3
+              className="text-base font-bold text-ink mb-2"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              なぜこの価格でご提供できるのか
+            </h3>
             <p className="text-sm text-ink-secondary leading-relaxed">
               {plan.whyThisPrice}
             </p>
           </div>
 
-          <div className="mt-4 text-[11px] text-ink-muted bg-base-warm px-4 py-3 flex items-start gap-2">
-            <Info className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>
-              火葬料・搬送料など地域により変動する費用は別途かかります。事前にお見積りをご提示し、ご納得いただいてから進めます。
+          <div className="mt-5 text-xs text-ink-muted bg-base-warm px-5 py-4 flex items-start gap-2 border border-border-light">
+            <Info className="w-4 h-4 shrink-0 mt-0.5" style={{ color: t.main }} />
+            <span className="leading-relaxed">
+              <strong>火葬料金は全プラン別途費用</strong>となります。地域・自治体により金額が異なるため、事前にお見積りをご提示し、ご納得いただいてから進めます。
             </span>
           </div>
         </div>
@@ -247,27 +338,20 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 2 ============ */}
       <section
-        className="py-8"
-        style={{ backgroundColor: t.dark }}
+        className="py-10"
+        style={{
+          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}DD 100%)`,
+        }}
       >
-        <PhoneCta label="お見積り・ご相談は無料です" dark />
+        <InlineCta label="お見積り・ご相談は無料です" dark accentColor={t.main} />
       </section>
 
-      {/* ============ SECTION: プランに含まれるもの (accordion) ============ */}
+      {/* ============ SECTION: プランに含まれるもの ============ */}
       <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span
-              className="w-1.5 h-8 inline-block rounded-full"
-              style={{ backgroundColor: t.main }}
-            />
-            <h2 className="text-lg font-bold text-ink">
-              プランに含まれるもの
-            </h2>
-          </div>
-          <p className="text-xs text-ink-muted mb-6 ml-4">
-            各カテゴリをタップして詳細を確認できます
-          </p>
+          <SectionTitle accentColor={t.main} sub="Inclusions">
+            プランに含まれるもの
+          </SectionTitle>
           <div className="space-y-2">
             {plan.includes.map((group) => (
               <Accordion
@@ -279,7 +363,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   {group.items.map((item) => (
                     <div
                       key={item}
-                      className="flex items-center gap-2 bg-base px-4 py-3 border border-border-light"
+                      className="flex items-center gap-2 bg-base-cool px-4 py-3 border border-border-light"
                     >
                       <Check
                         className="w-4 h-4 shrink-0"
@@ -295,7 +379,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
           {plan.notIncluded.length > 0 && (
             <div className="mt-8 pt-6 border-t border-border">
-              <h3 className="text-xs font-bold text-ink-muted tracking-wider mb-3 uppercase">
+              <h3 className="text-xs font-bold text-ink-muted tracking-wider mb-3">
                 別途費用が必要なもの
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -316,25 +400,21 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 3 ============ */}
       <section
-        className="py-8 border-y-2"
+        className="py-8 border-y"
         style={{
           backgroundColor: t.light,
-          borderColor: `${t.main}33`,
+          borderColor: `${t.main}22`,
         }}
       >
-        <PhoneCta label="含まれるものについてのご質問も承ります" />
+        <InlineCta label="含まれるものについてのご質問も承ります" accentColor={t.main} />
       </section>
 
       {/* ============ SECTION: ご葬儀の流れ ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-8">
-            <span
-              className="w-1.5 h-8 inline-block rounded-full"
-              style={{ backgroundColor: t.main }}
-            />
-            <h2 className="text-lg font-bold text-ink">ご葬儀の流れ</h2>
-          </div>
+          <SectionTitle accentColor={t.main} sub="Flow">
+            ご葬儀の流れ
+          </SectionTitle>
           <div className="space-y-0">
             {plan.flow.map((f, i) => (
               <div key={f.step} className="flex gap-5">
@@ -353,7 +433,12 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   )}
                 </div>
                 <div className="pb-10">
-                  <h3 className="text-base font-bold mb-1">{f.title}</h3>
+                  <h3
+                    className="text-lg font-bold mb-1"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    {f.title}
+                  </h3>
                   <p className="text-sm text-ink-secondary leading-relaxed">
                     {f.desc}
                   </p>
@@ -365,34 +450,30 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       </section>
 
       {/* ============ SECTION: よくあるご質問 ============ */}
-      <section className="bg-surface py-section border-t-2 border-border">
+      <section className="bg-surface py-section border-t border-border">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-8">
-            <span
-              className="w-1.5 h-8 inline-block rounded-full"
-              style={{ backgroundColor: t.main }}
-            />
-            <h2 className="text-lg font-bold text-ink">よくあるご質問</h2>
-          </div>
+          <SectionTitle accentColor={t.main} sub="FAQ">
+            よくあるご質問
+          </SectionTitle>
           <div className="divide-y divide-border">
             {plan.faq.map((item) => (
               <div key={item.q} className="py-6">
                 <div className="flex items-start gap-3 mb-3">
                   <span
-                    className="text-base font-bold text-white w-7 h-7 flex items-center justify-center shrink-0 text-xs"
+                    className="text-sm font-bold text-white w-8 h-8 flex items-center justify-center shrink-0"
                     style={{ backgroundColor: t.main }}
                   >
                     Q
                   </span>
-                  <span className="text-sm font-bold leading-relaxed pt-0.5">
+                  <span
+                    className="text-base font-bold leading-relaxed pt-0.5"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
                     {item.q}
                   </span>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-base font-bold text-white bg-accent w-7 h-7 flex items-center justify-center shrink-0 text-xs">
-                    A
-                  </span>
-                  <span className="text-sm text-ink-secondary leading-relaxed pt-0.5">
+                <div className="flex items-start gap-3 ml-11">
+                  <span className="text-sm text-ink-secondary leading-[1.9]">
                     {item.a}
                   </span>
                 </div>
@@ -404,10 +485,12 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 4 ============ */}
       <section
-        className="py-8"
-        style={{ backgroundColor: t.dark }}
+        className="py-10"
+        style={{
+          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}DD 100%)`,
+        }}
       >
-        <PhoneCta label="ご質問だけでもお気軽にどうぞ" dark />
+        <InlineCta label="ご質問だけでもお気軽にどうぞ" dark accentColor={t.main} />
       </section>
 
       {/* ============ SECTION: ご留意事項 ============ */}
@@ -434,10 +517,12 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 5 (bottom) ============ */}
       <section
-        className="py-12"
-        style={{ backgroundColor: t.dark }}
+        className="py-14"
+        style={{
+          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}EE 100%)`,
+        }}
       >
-        <PhoneCta label="まずはお気軽にご相談ください" dark />
+        <InlineCta label="まずはお気軽にご相談ください" dark accentColor={t.main} />
       </section>
 
       {/* ============ LP Banner ============ */}

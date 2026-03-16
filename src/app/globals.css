@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-base: #F4F0EA;
-  --color-base-warm: #EFEBE4;
-  --color-base-cool: #F7F5F2;
+  --color-base: #EFF5F0;
+  --color-base-warm: #E8F0EA;
+  --color-base-cool: #F2F7F3;
   --color-surface: #FFFFFF;
-  --color-surface-elevated: #FDFCFA;
+  --color-surface-elevated: #FAFCFA;
 
-  --color-main: #6B8560;
-  --color-main-light: #8BA382;
-  --color-main-dark: #516849;
-  --color-main-pale: #E6EDE3;
-  --color-main-faint: #F2F6F0;
+  --color-main: #4A7C59;
+  --color-main-light: #6B9E7A;
+  --color-main-dark: #2E5A39;
+  --color-main-pale: #DDEEE0;
+  --color-main-faint: #EDF6EF;
 
-  --color-accent: #C4AD8C;
-  --color-accent-light: #D4C4A8;
-  --color-accent-dark: #A8906E;
-  --color-accent-pale: #F0EBE2;
+  --color-accent: #8BAA80;
+  --color-accent-light: #A8C49E;
+  --color-accent-dark: #5C8052;
+  --color-accent-pale: #E6EDE3;
 
   --color-cta: #C97D30;
   --color-cta-hover: #B56D20;
@@ -24,19 +24,20 @@
   --color-cta-surface: #FFF8F0;
 
   --color-ink: #1A1A1A;
-  --color-ink-secondary: #555555;
-  --color-ink-muted: #999999;
+  --color-ink-secondary: #444444;
+  --color-ink-muted: #888888;
   --color-ink-inverse: #F4F0EA;
 
-  --color-border: #E0DBD4;
-  --color-border-light: #EBE7E2;
+  --color-border: #C8D8CC;
+  --color-border-light: #DCE8DE;
 
-  --color-dark: #1E2118;
-  --color-dark-surface: #2A2D24;
-  --color-dark-elevated: #363930;
+  --color-dark: #1A2B1F;
+  --color-dark-surface: #243028;
+  --color-dark-elevated: #2E3B32;
   --color-dark-text: #E8E4DC;
 
-  --font-sans: "Noto Sans JP", sans-serif;
+  --font-sans: var(--font-sans), "Noto Sans JP", sans-serif;
+  --font-serif: var(--font-serif), "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
 
   --spacing-section: clamp(60px, 10vw, 100px);
 
@@ -48,9 +49,9 @@
 body {
   background: var(--color-base);
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-weight: 400;
-  line-height: 1.8;
+  line-height: 1.9;
   -webkit-font-smoothing: antialiased;
 }
 
