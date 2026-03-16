@@ -38,11 +38,7 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 /* ── Inline CTA (電話+フォーム 2ボタン) ── */
-function InlineCta({
-  label,
-}: {
-  label: string;
-}) {
+function InlineCta({ label }: { label: string }) {
   return (
     <div className="text-center">
       <p className="text-sm text-ink-secondary mb-5" style={{ fontFamily: "var(--font-serif)" }}>{label}</p>
@@ -50,7 +46,7 @@ function InlineCta({
         <a
           href={SITE.phoneTel}
           className="flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-5 text-white font-bold text-xl rounded-sm transition-colors shadow-xl"
-          style={{ backgroundColor: "#D94F04", }}
+          style={{ backgroundColor: "#D94F04" }}
         >
           <Phone className="w-6 h-6" />
           {SITE.phone}
@@ -66,19 +62,13 @@ function InlineCta({
           お問い合わせ
         </a>
       </div>
-      <p className="text-xs mt-4 text-ink-muted">
-        24時間365日対応・相談無料
-      </p>
+      <p className="text-xs mt-4 text-ink-muted">24時間365日対応・相談無料</p>
     </div>
   );
 }
 
 /* ── Section Title ── */
-function SectionTitle({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-10 text-center">
       <h2
@@ -119,13 +109,48 @@ function Accordion({
           style={{ color: accentColor }}
         />
       </button>
-      <div
-        className={`grid transition-all duration-300 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-      >
+      <div className={`grid transition-all duration-300 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
         <div className="overflow-hidden">
           <div className="px-5 pb-4 pt-2 bg-surface">{children}</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ── Feathered Image: gradient mask on edges ── */
+function FeatheredImage({
+  src,
+  alt,
+  direction = "bottom",
+  className = "",
+}: {
+  src: string;
+  alt: string;
+  direction?: "bottom" | "top" | "both" | "left" | "right" | "radial";
+  className?: string;
+}) {
+  const maskMap: Record<string, string> = {
+    bottom: "linear-gradient(to bottom, black 40%, transparent 100%)",
+    top: "linear-gradient(to top, black 40%, transparent 100%)",
+    both: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+    left: "linear-gradient(to left, black 50%, transparent 100%)",
+    right: "linear-gradient(to right, black 50%, transparent 100%)",
+    radial: "radial-gradient(ellipse 80% 70% at center, black 30%, transparent 80%)",
+  };
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        style={{
+          WebkitMaskImage: maskMap[direction],
+          maskImage: maskMap[direction],
+        }}
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
     </div>
   );
 }
@@ -138,7 +163,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
     <>
       {/* ============ HERO / FV ============ */}
       <section className="relative overflow-hidden">
-        {/* Layered wallpaper background for transparent PNG product image */}
         <div
           className="absolute inset-0"
           style={{
@@ -150,7 +174,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
             `,
           }}
         />
-        {/* Refined geometric pattern (subtle diamond lattice) */}
         <div
           className="absolute inset-0 opacity-[0.025]"
           style={{
@@ -160,7 +183,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
             `,
           }}
         />
-        {/* Soft bokeh circles */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -171,17 +193,12 @@ export function PlanDetail({ plan }: { plan: Plan }) {
             `,
           }}
         />
-        {/* Top accent bar */}
         <div
           className="absolute top-0 left-0 right-0 h-1.5"
-          style={{
-            background: `linear-gradient(90deg, ${t.main}, ${t.main}88, ${t.main})`,
-          }}
+          style={{ background: `linear-gradient(90deg, ${t.main}, ${t.main}88, ${t.main})` }}
         />
-
         <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-center">
-            {/* Left: Transparent PNG product image (large, with price baked in) */}
             <div className="flex justify-center order-1">
               <div className="relative w-[320px] sm:w-[440px] aspect-square drop-shadow-2xl">
                 <Image
@@ -194,8 +211,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                 />
               </div>
             </div>
-
-            {/* Right: Hero atmosphere photo */}
             <div className="flex justify-center order-2">
               <div className="relative w-full max-w-[480px] aspect-[4/3] overflow-hidden shadow-2xl">
                 <Image
@@ -206,7 +221,6 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   priority
                   sizes="(max-width: 640px) 100vw, 480px"
                 />
-                {/* Gradient overlay with plan title */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h1
@@ -215,9 +229,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   >
                     {plan.title}
                   </h1>
-                  <p className="text-white/80 text-sm mt-2 leading-relaxed">
-                    {plan.description}
-                  </p>
+                  <p className="text-white/80 text-sm mt-2 leading-relaxed">{plan.description}</p>
                 </div>
               </div>
             </div>
@@ -225,20 +237,35 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* ============ CTA 1 (FV直後) ============ */}
-      <section
-        className="py-10"
-        style={{ backgroundColor: t.light }}
-      >
+      {/* ============ CTA 1 ============ */}
+      <section className="py-10" style={{ backgroundColor: t.light }}>
         <InlineCta label="まずはお気軽にご相談ください" />
+      </section>
+
+      {/* ============ Visual strip: 祭壇+スタッフ (feathered & blended) ============ */}
+      <section className="relative h-[280px] sm:h-[360px] overflow-hidden bg-base">
+        {/* Left: altar image with right-side feather */}
+        <FeatheredImage
+          src="/images/祭壇（黄色）_4.JPG"
+          alt="生花祭壇"
+          direction="right"
+          className="absolute inset-0 w-[60%] h-full"
+        />
+        {/* Right: staff image with left-side feather, overlapping */}
+        <FeatheredImage
+          src="/images/葬儀屋スタッフ_10.JPG"
+          alt="スタッフの対応"
+          direction="left"
+          className="absolute top-0 right-0 w-[55%] h-full"
+        />
+        {/* Bottom gradient fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--color-surface)] to-transparent" />
       </section>
 
       {/* ============ SECTION: こんな方におすすめ ============ */}
       <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle>
-            こんな方におすすめ
-          </SectionTitle>
+          <SectionTitle>こんな方におすすめ</SectionTitle>
           <div className="grid sm:grid-cols-3 gap-6">
             {plan.targets.map((tgt) => {
               const Icon = iconMap[tgt.icon] || Heart;
@@ -247,10 +274,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   key={tgt.text}
                   className="flex flex-col items-center text-center px-4 py-8 bg-surface border border-border-light"
                 >
-                  <Icon
-                    className="w-10 h-10 mb-4"
-                    style={{ color: t.main }}
-                  />
+                  <Icon className="w-10 h-10 mb-4" style={{ color: t.main }} />
                   <span
                     className="text-base font-bold leading-relaxed text-ink"
                     style={{ fontFamily: "var(--font-serif)", color: "#1A1A1A" }}
@@ -264,45 +288,62 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* ============ SECTION: プランの特徴 ============ */}
+      {/* ============ SECTION: プランの特徴 (with overlapping images) ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle>
-            プランの特徴
-          </SectionTitle>
-          <div className="grid sm:grid-cols-2 gap-8 mb-10">
-            <div className="relative aspect-[4/3] overflow-hidden shadow-lg">
-              <Image
-                src={plan.image}
-                alt={`${plan.title}のイメージ`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 50vw"
-              />
-            </div>
-            <div className="flex flex-col justify-center">
-              <p
-                className="text-base text-ink-secondary leading-[2.0]"
-                style={{ fontFamily: "var(--font-serif)" }}
-              >
-                {plan.longDescription}
-              </p>
+          <SectionTitle>プランの特徴</SectionTitle>
+
+          {/* Overlapping image composition */}
+          <div className="relative mb-12">
+            <div className="grid sm:grid-cols-5 gap-0 items-stretch">
+              {/* Main image: 3 cols, with bottom feather */}
+              <div className="sm:col-span-3 relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={plan.image}
+                  alt={`${plan.title}のイメージ`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 60vw"
+                  style={{
+                    WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                    maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                  }}
+                />
+              </div>
+              {/* Side image: 2 cols, overlapping left with feather */}
+              <div className="sm:col-span-2 relative aspect-[3/4] sm:aspect-auto sm:-ml-12 mt-4 sm:mt-8 overflow-hidden">
+                <Image
+                  src="/images/祭壇（黄色）_25.JPG"
+                  alt="祭壇のイメージ"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 40vw"
+                  style={{
+                    WebkitMaskImage: "linear-gradient(to left, black 50%, transparent 100%)",
+                    maskImage: "linear-gradient(to left, black 50%, transparent 100%)",
+                  }}
+                />
+              </div>
             </div>
           </div>
 
-          <div
-            className="border-l-4 px-6 py-6 bg-surface shadow-sm"
-            style={{ borderColor: t.main }}
-          >
+          <div className="flex flex-col justify-center mb-10">
+            <p
+              className="text-base text-ink-secondary leading-[2.0]"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              {plan.longDescription}
+            </p>
+          </div>
+
+          <div className="border-l-4 px-6 py-6 bg-surface shadow-sm" style={{ borderColor: t.main }}>
             <h3
               className="text-base font-bold text-ink mb-2"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               なぜこの価格でご提供できるのか
             </h3>
-            <p className="text-sm text-ink-secondary leading-relaxed">
-              {plan.whyThisPrice}
-            </p>
+            <p className="text-sm text-ink-secondary leading-relaxed">{plan.whyThisPrice}</p>
           </div>
 
           <div className="mt-5 text-xs text-ink-muted bg-base-warm px-5 py-4 flex items-start gap-2 border border-border-light">
@@ -315,36 +356,24 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       </section>
 
       {/* ============ CTA 2 ============ */}
-      <section
-        className="py-10"
-        style={{ backgroundColor: t.light }}
-      >
+      <section className="py-10" style={{ backgroundColor: t.light }}>
         <InlineCta label="お見積り・ご相談は無料です" />
       </section>
 
       {/* ============ SECTION: プランに含まれるもの ============ */}
       <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle>
-            プランに含まれるもの
-          </SectionTitle>
+          <SectionTitle>プランに含まれるもの</SectionTitle>
           <div className="space-y-2">
             {plan.includes.map((group) => (
-              <Accordion
-                key={group.category}
-                title={group.category}
-                accentColor={t.main}
-              >
+              <Accordion key={group.category} title={group.category} accentColor={t.main}>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {group.items.map((item) => (
                     <div
                       key={item}
                       className="flex items-center gap-2 bg-base-cool px-4 py-3 border border-border-light"
                     >
-                      <Check
-                        className="w-4 h-4 shrink-0"
-                        style={{ color: t.main }}
-                      />
+                      <Check className="w-4 h-4 shrink-0" style={{ color: t.main }} />
                       <span className="text-sm">{item}</span>
                     </div>
                   ))}
@@ -352,13 +381,9 @@ export function PlanDetail({ plan }: { plan: Plan }) {
               </Accordion>
             ))}
           </div>
-
           {plan.notIncluded.length > 0 && (
             <div className="mt-10 pt-8 border-t border-border">
-              <h3
-                className="text-base font-bold text-ink mb-4"
-                style={{ fontFamily: "var(--font-serif)" }}
-              >
+              <h3 className="text-base font-bold text-ink mb-4" style={{ fontFamily: "var(--font-serif)" }}>
                 別途費用が必要なもの
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -379,19 +404,39 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       </section>
 
       {/* ============ CTA 3 ============ */}
-      <section
-        className="py-10"
-        style={{ backgroundColor: t.light }}
-      >
+      <section className="py-10" style={{ backgroundColor: t.light }}>
         <InlineCta label="含まれるものについてのご質問も承ります" />
+      </section>
+
+      {/* ============ Consultation visual (radial feather) ============ */}
+      <section className="relative h-[240px] sm:h-[320px] overflow-hidden" style={{ backgroundColor: t.light }}>
+        <div className="absolute inset-0">
+          <Image
+            src="/images/商談シーン_34.JPG"
+            alt="ご相談の様子"
+            fill
+            className="object-cover object-top"
+            sizes="100vw"
+            style={{
+              WebkitMaskImage: "radial-gradient(ellipse 90% 80% at center, black 20%, transparent 75%)",
+              maskImage: "radial-gradient(ellipse 90% 80% at center, black 20%, transparent 75%)",
+            }}
+          />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <p
+            className="text-lg sm:text-xl font-bold text-ink/80 bg-white/60 backdrop-blur-sm px-8 py-4"
+            style={{ fontFamily: "var(--font-serif)" }}
+          >
+            丁寧なご相談からはじまります
+          </p>
+        </div>
       </section>
 
       {/* ============ SECTION: ご葬儀の流れ ============ */}
       <section className="bg-base py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle>
-            ご葬儀の流れ
-          </SectionTitle>
+          <SectionTitle>ご葬儀の流れ</SectionTitle>
           <div className="space-y-0">
             {plan.flow.map((f, i) => (
               <div key={f.step} className="flex gap-5">
@@ -403,22 +448,14 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                     {f.step}
                   </div>
                   {i < plan.flow.length - 1 && (
-                    <div
-                      className="w-px flex-1 min-h-[48px]"
-                      style={{ backgroundColor: `${t.main}33` }}
-                    />
+                    <div className="w-px flex-1 min-h-[48px]" style={{ backgroundColor: `${t.main}33` }} />
                   )}
                 </div>
                 <div className="pb-10">
-                  <h3
-                    className="text-lg font-bold mb-1"
-                    style={{ fontFamily: "var(--font-serif)" }}
-                  >
+                  <h3 className="text-lg font-bold mb-1" style={{ fontFamily: "var(--font-serif)" }}>
                     {f.title}
                   </h3>
-                  <p className="text-sm text-ink-secondary leading-relaxed">
-                    {f.desc}
-                  </p>
+                  <p className="text-sm text-ink-secondary leading-relaxed">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -426,12 +463,20 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
+      {/* ============ Altar full-width visual (top & bottom feather) ============ */}
+      <section className="relative h-[200px] sm:h-[300px] overflow-hidden bg-surface">
+        <FeatheredImage
+          src="/images/祭壇（黄色）_32.JPG"
+          alt="祭壇の様子"
+          direction="both"
+          className="absolute inset-0 w-full h-full"
+        />
+      </section>
+
       {/* ============ SECTION: よくあるご質問 ============ */}
-      <section className="bg-surface py-section border-t border-border">
+      <section className="bg-surface py-section">
         <div className="max-w-3xl mx-auto px-6">
-          <SectionTitle>
-            よくあるご質問
-          </SectionTitle>
+          <SectionTitle>よくあるご質問</SectionTitle>
           <div className="divide-y divide-border">
             {plan.faq.map((item) => (
               <div key={item.q} className="py-6">
@@ -461,11 +506,28 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       </section>
 
       {/* ============ CTA 4 ============ */}
-      <section
-        className="py-10"
-        style={{ backgroundColor: t.light }}
-      >
+      <section className="py-10" style={{ backgroundColor: t.light }}>
         <InlineCta label="ご質問だけでもお気軽にどうぞ" />
+      </section>
+
+      {/* ============ Staff + model blended visual ============ */}
+      <section className="relative h-[220px] sm:h-[280px] overflow-hidden bg-base">
+        {/* Staff image with radial feather */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/モデル切り抜き_4.JPG"
+            alt="スタッフ"
+            fill
+            className="object-cover object-top"
+            sizes="100vw"
+            style={{
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%)",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%)",
+            }}
+          />
+        </div>
+        {/* Color overlay for soft blend */}
+        <div className="absolute inset-0" style={{ backgroundColor: `${t.light}44`, mixBlendMode: "soft-light" }} />
       </section>
 
       {/* ============ SECTION: ご留意事項 ============ */}
@@ -473,9 +535,7 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         <div className="max-w-3xl mx-auto px-6">
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-4 h-4 text-ink-muted" />
-            <h3 className="text-xs font-semibold text-ink-muted">
-              ご留意事項
-            </h3>
+            <h3 className="text-xs font-semibold text-ink-muted">ご留意事項</h3>
           </div>
           <ul className="space-y-1.5">
             {plan.notes.map((note) => (
@@ -490,36 +550,22 @@ export function PlanDetail({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* ============ CTA 5 (bottom) ============ */}
-      <section
-        className="py-14"
-        style={{ backgroundColor: t.light }}
-      >
+      {/* ============ CTA 5 ============ */}
+      <section className="py-14" style={{ backgroundColor: t.light }}>
         <InlineCta label="まずはお気軽にご相談ください" />
       </section>
 
       {/* ============ LP Banner ============ */}
       <section className="bg-surface py-12">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <Image
-            src="/images/logo.png"
-            alt="ファーストリーフ"
-            width={120}
-            height={120}
-            className="mx-auto mb-4"
-          />
-          <p className="text-sm text-ink-secondary mb-5">
-            斎場案内・会社概要・トータルサポートなど詳しい情報はこちら
-          </p>
+          <Image src="/images/logo.png" alt="ファーストリーフ" width={120} height={120} className="mx-auto mb-4" />
+          <p className="text-sm text-ink-secondary mb-5">斎場案内・会社概要・トータルサポートなど詳しい情報はこちら</p>
           <a
             href={SITE.lpUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border-2 px-8 py-3 text-sm font-bold tracking-wide transition-colors hover:text-white"
-            style={{
-              borderColor: t.main,
-              color: t.main,
-            }}
+            style={{ borderColor: t.main, color: t.main }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = t.main;
               e.currentTarget.style.color = "#fff";
