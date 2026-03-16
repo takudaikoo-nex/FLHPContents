@@ -249,20 +249,22 @@ export function PlanDetail({ plan }: { plan: Plan }) {
           <SectionTitle>
             こんな方におすすめ
           </SectionTitle>
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-3 gap-6">
             {plan.targets.map((tgt) => {
               const Icon = iconMap[tgt.icon] || Heart;
               return (
                 <div
                   key={tgt.text}
-                  className="flex items-start gap-3 px-5 py-6 border-l-4 bg-base-cool"
-                  style={{ borderColor: t.main }}
+                  className="flex flex-col items-center text-center px-4 py-8 bg-surface border border-border-light"
                 >
                   <Icon
-                    className="w-6 h-6 shrink-0 mt-0.5"
+                    className="w-10 h-10 mb-4"
                     style={{ color: t.main }}
                   />
-                  <span className="text-sm leading-snug font-medium">
+                  <span
+                    className="text-base font-bold leading-relaxed"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
                     {tgt.text}
                   </span>
                 </div>
