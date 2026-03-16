@@ -262,8 +262,8 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                     style={{ color: t.main }}
                   />
                   <span
-                    className="text-base font-bold leading-relaxed"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    className="text-base font-bold leading-relaxed text-ink"
+                    style={{ fontFamily: "var(--font-serif)", color: "#1A1A1A" }}
                   >
                     {tgt.text}
                   </span>
@@ -455,13 +455,13 @@ export function PlanDetail({ plan }: { plan: Plan }) {
                   </span>
                   <span
                     className="text-base font-bold leading-relaxed pt-0.5"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    style={{ fontFamily: "var(--font-serif)", color: "#1A1A1A" }}
                   >
                     {item.q}
                   </span>
                 </div>
                 <div className="flex items-start gap-3 ml-11">
-                  <span className="text-sm text-ink-secondary leading-[1.9]">
+                  <span className="text-sm leading-[1.9]" style={{ color: "#333333" }}>
                     {item.a}
                   </span>
                 </div>
