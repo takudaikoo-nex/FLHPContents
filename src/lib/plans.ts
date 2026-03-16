@@ -358,7 +358,7 @@ export const plans: Plan[] = [
     image: "/images/S__58425374_0.jpg",
     heroImage: "/images/S__58425361_0.jpg",
     fvImage: "/images/fv/plan03-owakare.png",
-    theme: { main: "#C9902A", light: "#FFF8E7", dark: "#1A1A1A", label: "格調・シンプル" },
+    theme: { main: "#2E5A39", light: "#DDEEE0", dark: "#0A1A0E", label: "自然・安らぎ" },
   },
 
   /* ──────────────────── PLAN 04 ──────────────────── */

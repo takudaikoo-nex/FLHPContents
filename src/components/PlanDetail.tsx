@@ -40,41 +40,33 @@ const iconMap: Record<string, React.ElementType> = {
 /* ── Inline CTA (電話+フォーム 2ボタン) ── */
 function InlineCta({
   label,
-  dark,
-  accentColor,
 }: {
   label: string;
-  dark?: boolean;
-  accentColor?: string;
 }) {
-  const bg = dark ? "bg-transparent" : "";
-  const textColor = dark ? "text-white/70" : "text-ink-secondary";
   return (
-    <div className={`${bg} text-center`}>
-      <p className={`text-xs ${textColor} mb-4 font-serif`}>{label}</p>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+    <div className="text-center">
+      <p className="text-sm text-ink-secondary mb-5" style={{ fontFamily: "var(--font-serif)" }}>{label}</p>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
         <a
           href={SITE.phoneTel}
-          className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-cta hover:bg-cta-hover text-white font-bold text-base rounded-sm transition-colors shadow-lg"
+          className="flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-5 text-white font-bold text-xl rounded-sm transition-colors shadow-xl"
+          style={{ backgroundColor: "#D94F04", }}
         >
-          <Phone className="w-5 h-5" />
+          <Phone className="w-6 h-6" />
           {SITE.phone}
         </a>
         <a
           href={SITE.formUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 border-2 font-bold text-sm rounded-sm transition-colors"
-          style={{
-            borderColor: dark ? "rgba(255,255,255,0.4)" : (accentColor || "#4A7C59"),
-            color: dark ? "#fff" : (accentColor || "#4A7C59"),
-          }}
+          className="flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-5 font-bold text-lg rounded-sm transition-colors shadow-xl text-white"
+          style={{ backgroundColor: "#2E7D32" }}
         >
-          <Mail className="w-4 h-4" />
+          <Mail className="w-5 h-5" />
           お問い合わせ
         </a>
       </div>
-      <p className={`text-[10px] mt-3 ${dark ? "text-white/40" : "text-ink-muted"}`}>
+      <p className="text-xs mt-4 text-ink-muted">
         24時間365日対応・相談無料
       </p>
     </div>
@@ -235,12 +227,10 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 1 (FV直後) ============ */}
       <section
-        className="py-8"
-        style={{
-          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}EE 100%)`,
-        }}
+        className="py-10"
+        style={{ backgroundColor: t.light }}
       >
-        <InlineCta label="まずはお気軽にご相談ください" dark accentColor={t.main} />
+        <InlineCta label="まずはお気軽にご相談ください" />
       </section>
 
       {/* ============ SECTION: こんな方におすすめ ============ */}
@@ -327,11 +317,9 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ CTA 2 ============ */}
       <section
         className="py-10"
-        style={{
-          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}DD 100%)`,
-        }}
+        style={{ backgroundColor: t.light }}
       >
-        <InlineCta label="お見積り・ご相談は無料です" dark accentColor={t.main} />
+        <InlineCta label="お見積り・ご相談は無料です" />
       </section>
 
       {/* ============ SECTION: プランに含まれるもの ============ */}
@@ -366,17 +354,21 @@ export function PlanDetail({ plan }: { plan: Plan }) {
           </div>
 
           {plan.notIncluded.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-border">
-              <h3 className="text-xs font-bold text-ink-muted tracking-wider mb-3">
+            <div className="mt-10 pt-8 border-t border-border">
+              <h3
+                className="text-base font-bold text-ink mb-4"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 別途費用が必要なもの
               </h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {plan.notIncluded.map((item) => (
                   <span
                     key={item}
-                    className="inline-flex items-center gap-1 text-xs px-3 py-2 bg-base-warm text-ink-muted border border-border-light"
+                    className="inline-flex items-center gap-2 text-sm px-5 py-3 bg-base-warm border border-border-light"
+                    style={{ color: "#333" }}
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-4 h-4" />
                     {item}
                   </span>
                 ))}
@@ -388,13 +380,10 @@ export function PlanDetail({ plan }: { plan: Plan }) {
 
       {/* ============ CTA 3 ============ */}
       <section
-        className="py-8 border-y"
-        style={{
-          backgroundColor: t.light,
-          borderColor: `${t.main}22`,
-        }}
+        className="py-10"
+        style={{ backgroundColor: t.light }}
       >
-        <InlineCta label="含まれるものについてのご質問も承ります" accentColor={t.main} />
+        <InlineCta label="含まれるものについてのご質問も承ります" />
       </section>
 
       {/* ============ SECTION: ご葬儀の流れ ============ */}
@@ -474,11 +463,9 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ CTA 4 ============ */}
       <section
         className="py-10"
-        style={{
-          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}DD 100%)`,
-        }}
+        style={{ backgroundColor: t.light }}
       >
-        <InlineCta label="ご質問だけでもお気軽にどうぞ" dark accentColor={t.main} />
+        <InlineCta label="ご質問だけでもお気軽にどうぞ" />
       </section>
 
       {/* ============ SECTION: ご留意事項 ============ */}
@@ -506,11 +493,9 @@ export function PlanDetail({ plan }: { plan: Plan }) {
       {/* ============ CTA 5 (bottom) ============ */}
       <section
         className="py-14"
-        style={{
-          background: `linear-gradient(135deg, ${t.dark} 0%, ${t.dark}EE 100%)`,
-        }}
+        style={{ backgroundColor: t.light }}
       >
-        <InlineCta label="まずはお気軽にご相談ください" dark accentColor={t.main} />
+        <InlineCta label="まずはお気軽にご相談ください" />
       </section>
 
       {/* ============ LP Banner ============ */}
