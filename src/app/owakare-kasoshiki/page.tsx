@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPlanBySlug } from "@/lib/plans";
-import { PlanDetail } from "@/components/PlanDetail";
+import { PlanDetailV2 } from "@/components/PlanDetailV2";
 
 const plan = getPlanBySlug("owakare-kasoshiki")!;
 
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function OwakareKasoshikiPage() {
-  return <PlanDetail plan={plan} />;
+  return <PlanDetailV2 plan={plan} />;
 }
