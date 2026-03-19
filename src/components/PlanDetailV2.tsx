@@ -7,21 +7,9 @@ import {
   X,
   ChevronRight,
   ChevronDown,
-  Wallet,
-  UserX,
-  Clock,
-  Flower2,
-  Heart,
-  Scale,
-  Home,
-  Building,
-  Ribbon,
   Info,
   Phone,
   Mail,
-  Gift,
-  Truck,
-  FileText,
   ShieldCheck,
   Star,
 } from "lucide-react";
@@ -29,18 +17,6 @@ import type { Plan } from "@/lib/plans";
 import { SITE } from "@/lib/constants";
 import { OtherPlans } from "@/components/OtherPlans";
 import { getOtherPlans } from "@/lib/plans";
-
-const iconMap: Record<string, React.ElementType> = {
-  wallet: Wallet,
-  "users-off": UserX,
-  clock: Clock,
-  flower: Flower2,
-  heart: Heart,
-  scale: Scale,
-  home: Home,
-  building: Building,
-  ribbon: Ribbon,
-};
 
 /* ── Inline CTA (電話+フォーム 2ボタン) ── */
 function InlineCta({ label, theme }: { label: string; theme: { main: string; dark: string } }) {
@@ -72,9 +48,12 @@ function InlineCta({ label, theme }: { label: string; theme: { main: string; dar
           お問い合わせ
         </a>
       </div>
-      <p className="text-sm mt-5" style={{ color: theme.main, fontFamily: "var(--font-serif)" }}>
-        24時間365日対応・相談無料
-      </p>
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <Image src="/images-LP/img_cta_review.png" alt="クチコミ評価5.0" width={60} height={60} className="w-12 h-12 sm:w-14 sm:h-14" />
+        <p className="text-sm" style={{ color: theme.main, fontFamily: "var(--font-serif)" }}>
+          24時間365日対応・相談無料
+        </p>
+      </div>
     </div>
   );
 }
@@ -327,7 +306,7 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
                 />
               </div>
             </div>
-            {/* イメージ写真 */}
+            {/* イメージ写真（テキストなし・画像のみ） */}
             <div className="flex justify-center order-2">
               <div className="relative w-full max-w-[500px] aspect-[4/3] overflow-hidden shadow-2xl">
                 <Image
@@ -338,18 +317,6 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
                   priority
                   sizes="(max-width: 640px) 100vw, 500px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h1
-                    className="text-3xl sm:text-4xl font-bold text-white leading-tight tracking-wide"
-                    style={{ fontFamily: "var(--font-serif)" }}
-                  >
-                    {plan.title}
-                  </h1>
-                  <p className="text-white/85 text-base mt-2 leading-relaxed" style={{ fontFamily: "var(--font-serif)" }}>
-                    {plan.description}
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -396,15 +363,17 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
           </h2>
           <div className="grid sm:grid-cols-3 gap-5">
             {[
-              { icon: Truck, title: "ご遺体搬送 無料", note: "20km圏内" },
-              { icon: Building, title: "ご安置 無料", note: "24時間対応" },
-              { icon: FileText, title: "役所届出代行 無料", note: "面倒な手続きすべてお任せ" },
+              { img: "/images-LP/img_proposal_03.png", title: "ご遺体搬送 無料", note: "20km圏内" },
+              { img: "/images-LP/img_greeting_01.png", title: "ご安置 無料", note: "24時間対応" },
+              { img: "/images-LP/img_proposal_02.png", title: "役所届出代行 無料", note: "面倒な手続きすべてお任せ" },
             ].map((item) => (
               <div
                 key={item.title}
                 className="flex flex-col items-center text-center px-4 py-8 bg-white/15 backdrop-blur-sm border border-white/20 rounded-sm"
               >
-                <item.icon className="w-12 h-12 mb-4 text-white/90" />
+                <div className="relative w-20 h-20 mb-4 rounded-full overflow-hidden">
+                  <Image src={item.img} alt={item.title} fill className="object-cover" sizes="80px" />
+                </div>
                 <span
                   className="text-lg font-bold text-white mb-2"
                   style={{ fontFamily: "var(--font-serif)" }}
@@ -477,14 +446,20 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
         <div className="max-w-3xl mx-auto px-6">
           <SectionTitle color={t.dark}>こんな方におすすめ</SectionTitle>
           <div className="flex flex-col gap-6 max-w-md mx-auto">
-            {plan.targets.map((tgt) => {
-              const Icon = iconMap[tgt.icon] || Heart;
+            {plan.targets.map((tgt, i) => {
+              const photos = [
+                "/images-LP/img_worry_01.png",
+                "/images-LP/img_proposal_01.png",
+                "/images-LP/img_proposal_03.png",
+              ];
               return (
                 <div
                   key={tgt.text}
-                  className="flex flex-col items-center text-center px-6 py-10 bg-surface border border-border-light shadow-sm"
+                  className="flex items-center gap-6 px-6 py-8 bg-surface border border-border-light shadow-sm"
                 >
-                  <Icon className="w-14 h-14 mb-5" style={{ color: t.main }} />
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden shrink-0 border-2" style={{ borderColor: `${t.main}40` }}>
+                    <Image src={photos[i % photos.length]} alt="" fill className="object-cover" sizes="80px" />
+                  </div>
                   <span
                     className="text-xl font-bold leading-relaxed"
                     style={{ fontFamily: "var(--font-serif)", color: "#1A1A1A" }}
