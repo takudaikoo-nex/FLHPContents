@@ -670,29 +670,39 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
         </div>
       </section>
 
-      {/* ============ Consultation visual ============ */}
-      <section className="relative h-[240px] sm:h-[320px] overflow-hidden" style={{ backgroundColor: t.light }}>
+      {/* ============ 感情訴求ビジュアル（後半パート_103） ============ */}
+      <section className="relative h-[300px] sm:h-[420px] overflow-hidden" style={{ backgroundColor: t.light }}>
         <div className="absolute inset-0">
           <Image
-            src="/images/商談シーン_34.JPG"
-            alt="ご相談の様子"
+            src="/images/後半パート_103.jpg"
+            alt="お別れの様子"
             fill
-            className="object-cover object-top"
+            className="object-cover object-center"
             sizes="100vw"
             style={{
-              WebkitMaskImage: "radial-gradient(ellipse 90% 80% at center, black 20%, transparent 75%)",
-              maskImage: "radial-gradient(ellipse 90% 80% at center, black 20%, transparent 75%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)",
             }}
           />
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-end justify-center pb-10">
           <p
-            className="text-xl sm:text-2xl font-bold bg-white/60 backdrop-blur-sm px-10 py-5"
+            className="text-xl sm:text-2xl font-bold bg-white/70 backdrop-blur-sm px-10 py-5"
             style={{ fontFamily: "var(--font-serif)", color: t.dark }}
           >
-            丁寧なご相談からはじまります
+            大切な方との、最後のお時間を
           </p>
         </div>
+      </section>
+
+      {/* ============ 相談シーンビジュアル ============ */}
+      <section className="relative h-[200px] sm:h-[280px] overflow-hidden bg-base">
+        <FeatheredImage
+          src="/images/商談シーン_34.JPG"
+          alt="ご相談の様子"
+          direction="both"
+          className="absolute inset-0 w-full h-full"
+        />
       </section>
 
       {/* ============ SECTION: ご葬儀の流れ ============ */}
