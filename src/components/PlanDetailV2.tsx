@@ -236,29 +236,6 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
 
   return (
     <>
-      {/* ============ HEADER ============ */}
-      <header
-        className="py-3 px-4 sm:px-8"
-        style={{ backgroundColor: t.dark }}
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Image
-            src="/images/logoFL.png"
-            alt="ファーストリーフ"
-            width={180}
-            height={40}
-            className="h-8 sm:h-10 w-auto"
-          />
-          <a
-            href={SITE.phoneTel}
-            className="flex items-center gap-2 text-white text-sm font-bold"
-          >
-            <Phone className="w-4 h-4" />
-            <span className="hidden sm:inline">{SITE.phone}</span>
-          </a>
-        </div>
-      </header>
-
       {/* ============ HERO / FV ============ */}
       <section className="relative overflow-hidden">
         {/* 背景壁紙：和紙風テクスチャ + プランカラー */}
