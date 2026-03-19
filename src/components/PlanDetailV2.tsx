@@ -10,7 +10,6 @@ import {
   Info,
   Phone,
   Mail,
-  ShieldCheck,
   Star,
 } from "lucide-react";
 import type { Plan } from "@/lib/plans";
@@ -340,9 +339,9 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
           </h2>
           <div className="grid sm:grid-cols-3 gap-5">
             {[
-              { img: "/images-LP/img_proposal_03.png", title: "ご遺体搬送 無料", note: "20km圏内" },
-              { img: "/images-LP/img_greeting_01.png", title: "ご安置 無料", note: "24時間対応" },
-              { img: "/images-LP/img_proposal_02.png", title: "役所届出代行 無料", note: "面倒な手続きすべてお任せ" },
+              { img: "/images-LP/img_worry_05.png", title: "ご遺体搬送 無料", note: "20km圏内" },
+              { img: "/images-LP/img_worry_08.png", title: "ご安置 無料", note: "24時間対応" },
+              { img: "/images-LP/img_worry_03.png", title: "役所届出代行 無料", note: "面倒な手続きすべてお任せ" },
             ].map((item) => (
               <div
                 key={item.title}
@@ -425,9 +424,9 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
           <div className="flex flex-col gap-6 max-w-md mx-auto">
             {plan.targets.map((tgt, i) => {
               const photos = [
+                "/images-LP/img_worry_04.png",
                 "/images-LP/img_worry_01.png",
-                "/images-LP/img_proposal_01.png",
-                "/images-LP/img_proposal_03.png",
+                "/images-LP/img_worry_07.png",
               ];
               return (
                 <div
@@ -637,7 +636,9 @@ export function PlanDetailV2({ plan }: { plan: Plan }) {
       <section className="py-12 sm:py-16" style={{ backgroundColor: t.light }}>
         <div className="max-w-xl mx-auto px-6 text-center">
           <div className="bg-white border border-border-light shadow-sm px-8 py-10">
-            <ShieldCheck className="w-10 h-10 mx-auto mb-4" style={{ color: t.main }} />
+            <div className="relative w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
+              <Image src="/images-LP/img_greeting_02.png" alt="スタッフ" fill className="object-cover" sizes="64px" />
+            </div>
             <h3
               className="text-xl font-bold mb-6"
               style={{ fontFamily: "var(--font-serif)", color: t.dark }}
