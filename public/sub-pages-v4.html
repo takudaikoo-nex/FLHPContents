@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ファーストリーフ ─ 下層ページ デザインカンプ v4（Sanity + Next.js）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ===================================
+   DESIGN SYSTEM v4 — 共通トークン
+   (top-page-v4.html と完全共有)
+   =================================== */
+:root {
+  --base: #F4F0EA;
+  --base-warm: #EFEBE4;
+  --base-cool: #F7F5F2;
+  --surface: #FFFFFF;
+  --surface-elevated: #FDFCFA;
+
+  --main: #6B8560;
+  --main-light: #8BA382;
+  --main-dark: #516849;
+  --main-pale: #E6EDE3;
+  --main-faint: #F2F6F0;
+  --main-vivid: #5A7A4E;
+
+  --accent: #C4AD8C;
+  --accent-light: #D4C4A8;
+  --accent-dark: #A8906E;
+  --accent-pale: #F0EBE2;
+
+  --cta: #C97D30;
+  --cta-hover: #B56D20;
+  --cta-light: #E0A060;
+  --cta-glow: rgba(201,125,48,0.25);
+  --cta-surface: #FFF8F0;
+
+  --text: #1A1A1A;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --text-inverse: #F4F0EA;
+
+  --border: #E0DBD4;
+  --border-light: #EBE7E2;
+
+  --dark: #1E2118;
+  --dark-surface: #2A2D24;
+  --dark-elevated: #363930;
+  --dark-text: #E8E4DC;
+
+  --fs-display: clamp(2.8rem, 6vw, 4.8rem);
+  --fs-h1: clamp(2rem, 4vw, 3rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.2rem);
+  --fs-h3: clamp(1.1rem, 2vw, 1.4rem);
+  --fs-body: clamp(0.875rem, 1.2vw, 1rem);
+  --fs-small: clamp(0.75rem, 1vw, 0.85rem);
+  --fs-caption: clamp(0.65rem, 0.8vw, 0.75rem);
+
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+  --space-2xl: 100px;
+  --section-pad: clamp(80px, 12vw, 140px);
+
+  --shadow-xs: 0 1px 3px rgba(26,26,26,0.04);
+  --shadow-sm: 0 2px 8px rgba(26,26,26,0.05);
+  --shadow-md: 0 8px 24px rgba(26,26,26,0.07);
+  --shadow-lg: 0 16px 48px rgba(26,26,26,0.09);
+  --shadow-xl: 0 24px 64px rgba(26,26,26,0.12);
+  --shadow-cta: 0 8px 32px var(--cta-glow);
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  --max-width: 1200px;
+  --gutter: clamp(20px, 4vw, 40px);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration: 0.6s;
+  --duration-fast: 0.3s;
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;color:var(--text);background:var(--base);line-height:1.9;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+/* ── Typography ── */
+.mincho,h1,h2,h3{font-family:"Shippori Mincho","游明朝","YuMincho",serif}
+.serif-en{font-family:"Cormorant Garamond","Shippori Mincho",serif;font-style:italic}
+h2{font-size:var(--fs-h2);font-weight:600;line-height:1.4;letter-spacing:.06em}
+h3{font-size:var(--fs-h3);font-weight:600;line-height:1.5;letter-spacing:.04em}
+
+/* ── Layout ── */
+.container{max-width:var(--max-width);margin:0 auto;padding:0 var(--gutter)}
+.section-label{display:inline-flex;align-items:center;gap:12px;font-family:"Cormorant Garamond",serif;font-size:.7rem;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--main);margin-bottom:var(--space-md)}
+.section-label::before{content:'';display:block;width:32px;height:1px;background:var(--main)}
+.section-heading{text-align:center;margin-bottom:var(--space-xl)}
+.section-heading .section-label{justify-content:center}
+.section-heading .section-label::after{content:'';display:block;width:32px;height:1px;background:var(--main)}
+.section-heading h2{margin-bottom:var(--space-sm)}
+.section-heading p{color:var(--text-secondary);font-size:var(--fs-body);max-width:540px;margin:0 auto;line-height:2}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 36px;border-radius:60px;font-size:var(--fs-small);font-weight:600;letter-spacing:.04em;transition:all var(--duration-fast) var(--ease-out);white-space:nowrap;position:relative;overflow:hidden}
+.btn-cta{background:var(--cta);color:#fff;box-shadow:var(--shadow-cta)}
+.btn-cta:hover{background:var(--cta-hover);transform:translateY(-2px);box-shadow:0 12px 40px var(--cta-glow)}
+.btn-cta::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none}
+.btn-outline{background:transparent;color:var(--main);border:1.5px solid var(--main)}
+.btn-outline:hover{background:var(--main);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px)}
+.btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.btn-arrow::after{content:'\2192';font-size:1.1em;transition:transform var(--duration-fast) var(--ease-out)}
+.btn-arrow:hover::after{transform:translateX(4px)}
+
+/* ── Scroll Reveal ── */
+.reveal{opacity:0;transform:translateY(48px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.stagger-1{transition-delay:.08s}.stagger-2{transition-delay:.16s}.stagger-3{transition-delay:.24s}.stagger-4{transition-delay:.32s}.stagger-5{transition-delay:.4s}
+
+/* ===================================
+   HEADER
+   =================================== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 clamp(20px,4vw,48px);height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(244,240,234,.96);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);box-shadow:0 1px 0 var(--border)}
+.header-logo{display:flex;align-items:center;gap:14px}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--main),var(--main-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Shippori Mincho",serif;font-size:1.1rem;font-weight:700;box-shadow:0 2px 8px rgba(107,133,96,.2)}
+.logo-text{font-family:"Shippori Mincho",serif;font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:.1em}
+.logo-sub{font-family:"Cormorant Garamond",serif;font-size:.6rem;font-weight:400;color:var(--text-muted);letter-spacing:.18em;margin-top:-1px}
+.header-nav{display:flex;align-items:center;gap:32px}
+.header-nav a{font-size:.78rem;font-weight:500;color:var(--text-secondary);letter-spacing:.06em;transition:color var(--duration-fast);position:relative;padding:4px 0}
+.header-nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--main);transition:width var(--duration-fast) var(--ease-out)}
+.header-nav a:hover{color:var(--main)}
+.header-nav a:hover::after{width:100%}
+.header-cta{display:flex;align-items:center;gap:10px;background:var(--cta);color:#fff;padding:10px 22px;border-radius:60px;font-size:.78rem;font-weight:700;letter-spacing:.04em;transition:all var(--duration-fast) var(--ease-out);box-shadow:0 2px 12px var(--cta-glow)}
+.header-cta:hover{background:var(--cta-hover);transform:translateY(-1px)}
+.header-cta svg{width:14px;height:14px;fill:currentColor}
+
+/* ===================================
+   PAGE SWITCHER (デザインカンプ用)
+   =================================== */
+.page-switcher{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;gap:4px;background:var(--dark);padding:6px;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl)}
+.page-switcher button{padding:8px 16px;border-radius:var(--radius-lg);background:transparent;color:rgba(232,228,220,.5);font-size:.7rem;font-weight:500;transition:all .3s;white-space:nowrap}
+.page-switcher button.active{background:var(--main);color:#fff}
+.page-switcher button:hover:not(.active){color:var(--dark-text)}
+
+/* ── Page container ── */
+.page{display:none}.page.active{display:block}
+
+/* ===================================
+   PAGE HERO (共通)
+   =================================== */
+.page-hero{position:relative;height:clamp(340px,45vw,460px);display:flex;align-items:flex-end;overflow:hidden;margin-top:72px}
+.page-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(30,33,24,.75) 0%,rgba(30,33,24,.3) 55%,rgba(30,33,24,.15) 100%)}
+.page-hero-content{position:relative;z-index:10;padding:var(--space-xl) var(--gutter);width:100%;max-width:var(--max-width);margin:0 auto}
+.page-hero-content .section-label{color:rgba(255,255,255,.6)}
+.page-hero-content .section-label::before{background:rgba(255,255,255,.3)}
+.page-hero-content h1{font-family:"Shippori Mincho",serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;font-weight:700;letter-spacing:.08em;margin-bottom:var(--space-xs)}
+.page-hero-content p{color:rgba(255,255,255,.75);font-size:var(--fs-body);max-width:500px}
+
+/* ===================================
+   CTA BAR (共通)
+   =================================== */
+.cta-bar{background:linear-gradient(135deg,var(--main) 0%,var(--main-dark) 100%);padding:var(--space-xl) 0;text-align:center}
+.cta-bar h2{color:#fff;margin-bottom:var(--space-xs);font-size:1.5rem}
+.cta-bar p{color:rgba(255,255,255,.75);font-size:var(--fs-body);margin-bottom:var(--space-md)}
+.cta-bar-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-bar .btn-cta{font-size:.95rem;padding:18px 44px}
+.cta-bar .btn-ghost{padding:18px 36px}
+
+/* ===================================
+   PAGE 1: PLANS
+   =================================== */
+.plan-section{padding:var(--section-pad) 0}
+.plan-section:nth-child(odd){background:var(--surface)}
+.plan-section:nth-child(even){background:var(--base)}
+.plan-detail{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,64px);align-items:center}
+.plan-detail.reverse{direction:rtl}
+.plan-detail.reverse>*{direction:ltr}
+.plan-detail-img{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg)}
+.plan-detail-img img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .8s var(--ease-out)}
+.plan-detail-img:hover img{transform:scale(1.03)}
+.plan-detail-info .plan-tag{display:inline-block;padding:6px 18px;border-radius:60px;font-size:.68rem;font-weight:600;letter-spacing:.1em;margin-bottom:var(--space-sm)}
+.plan-tag-simple{background:var(--main-pale);color:var(--main-dark)}
+.plan-tag-farewell{background:var(--accent-pale);color:var(--accent-dark)}
+.plan-tag-family{background:#F0E8E8;color:#8A6060}
+.plan-detail-info h2{text-align:left;margin-bottom:var(--space-xs)}
+.plan-detail-info .plan-price{font-family:"Shippori Mincho",serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;color:var(--cta);margin-bottom:var(--space-sm)}
+.plan-detail-info .plan-price span{font-size:.85rem;font-weight:400;color:var(--text-secondary)}
+.plan-detail-info .plan-desc{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-md)}
+.plan-includes{margin-bottom:var(--space-md)}
+.plan-includes h4{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:var(--space-xs);letter-spacing:.06em;font-family:"Shippori Mincho",serif}
+.plan-includes ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.plan-includes li{font-size:.78rem;padding:6px 14px;background:var(--main-faint);border-radius:60px;color:var(--main-dark);font-weight:500}
+
+/* 5つのチェック */
+.checks-section{padding:var(--section-pad) 0;background:var(--base)}
+.checks-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-sm)}
+.check-item{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-lg) var(--space-md);text-align:center;transition:transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.check-item:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.check-item-num{font-family:"Cormorant Garamond",serif;font-size:2.2rem;font-weight:300;color:var(--cta);margin-bottom:var(--space-xs);line-height:1}
+.check-item h3{font-size:.88rem;line-height:1.5;margin-bottom:var(--space-xs)}
+.check-item p{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.8}
+.checks-conclusion{background:var(--main);color:#fff;padding:var(--space-lg);border-radius:var(--radius-xl);text-align:center;margin-top:var(--space-md)}
+.checks-conclusion h3{color:#fff;font-size:1.15rem;margin-bottom:4px}
+.checks-conclusion p{font-size:var(--fs-small);color:rgba(255,255,255,.85)}
+
+/* 他社見積もり査定 */
+.estimate-section{padding:var(--section-pad) 0;background:var(--surface)}
+.estimate-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,64px);align-items:center}
+.estimate-visual{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg)}
+.estimate-visual img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.estimate-text h2{text-align:left;margin-bottom:var(--space-sm)}
+.estimate-text p{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-md)}
+
+/* ===================================
+   PAGE 2: FACILITY GUIDE
+   =================================== */
+.own-facility{padding:var(--section-pad) 0;background:var(--surface)}
+.own-facility-inner{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(32px,6vw,64px);align-items:start}
+.own-facility-gallery{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);position:relative}
+.own-facility-gallery img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.own-facility-gallery .badge{position:absolute;top:var(--space-sm);left:var(--space-sm);padding:8px 20px;background:rgba(201,125,48,.95);color:#fff;border-radius:60px;font-size:.72rem;font-weight:700;box-shadow:0 4px 16px var(--cta-glow)}
+.own-facility-info h2{text-align:left;margin-bottom:var(--space-sm)}
+.own-facility-info .facility-desc{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-md)}
+.facility-features-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:var(--space-md)}
+.facility-feat{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--main-faint);border-radius:var(--radius);font-size:.82rem;font-weight:500}
+.facility-feat .fcheck{color:var(--main);font-weight:700;font-size:1rem}
+.facility-addr{font-size:var(--fs-small);color:var(--text-secondary);padding-left:var(--space-sm);border-left:2px solid var(--border);line-height:2;margin-bottom:var(--space-md)}
+
+/* エリアタブ */
+.area-tabs-section{padding:var(--section-pad) 0;background:var(--base)}
+.area-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:var(--space-lg);flex-wrap:wrap}
+.area-tab{padding:10px 24px;border:1.5px solid var(--border);border-radius:60px;background:var(--surface);font-size:.82rem;cursor:pointer;transition:all .3s;font-weight:500}
+.area-tab.active{background:var(--main);color:#fff;border-color:var(--main)}
+.area-tab:hover:not(.active){border-color:var(--main);color:var(--main)}
+.area-content{display:none}
+.area-content.active{display:block}
+
+/* 施設カードグリッド (参考: kanagawa-ceremony.com) */
+.facility-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);margin-bottom:var(--space-lg)}
+.fcard{background:var(--surface);border-radius:var(--radius-xl);overflow:hidden;transition:transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.fcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.fcard-img{position:relative;overflow:hidden}
+.fcard-img img{width:100%;aspect-ratio:16/10;object-fit:cover;transition:transform .6s var(--ease-out)}
+.fcard:hover .fcard-img img{transform:scale(1.04)}
+/* 規模タグ S/M/L */
+.fcard-scale{position:absolute;top:var(--space-xs);right:var(--space-xs);padding:4px 14px;border-radius:60px;font-size:.62rem;font-weight:700;letter-spacing:.08em}
+.fscale-s{background:var(--main-pale);color:var(--main-dark)}
+.fscale-m{background:var(--accent-pale);color:var(--accent-dark)}
+.fscale-l{background:var(--cta-surface);color:var(--cta)}
+.fcard-body{padding:var(--space-sm)}
+.fcard-body h4{font-family:"Shippori Mincho",serif;font-size:.9rem;font-weight:600;margin-bottom:4px}
+.fcard-body .fcard-addr{font-size:var(--fs-caption);color:var(--text-muted);margin-bottom:var(--space-xs)}
+.fcard-body .fcard-info{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-xs)}
+.fcard-body .fcard-info span{font-size:.6rem;padding:3px 8px;background:var(--main-faint);border-radius:60px;color:var(--main-dark)}
+.fcard-body .fcard-btn{display:block;text-align:center;padding:10px;background:var(--base);border-radius:var(--radius);font-size:var(--fs-caption);font-weight:600;color:var(--main);transition:all .3s;margin-top:var(--space-xs)}
+.fcard-body .fcard-btn:hover{background:var(--main);color:#fff}
+.fcard-body .fcard-price{font-size:.68rem;color:var(--text-secondary);margin-bottom:4px;line-height:1.6}
+
+/* エリアタブ件数バッジ */
+.area-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:6px;padding:0 6px;border-radius:60px;background:var(--main-pale);color:var(--main-dark);font-size:.62rem;font-weight:700;font-family:"Cormorant Garamond",serif}
+.area-tab.active .area-count{background:rgba(255,255,255,.25);color:#fff}
+
+/* テーブル表示（料金比較用） */
+.facility-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:var(--space-md);font-size:.78rem}
+.facility-table thead{background:var(--main);color:#fff}
+.facility-table th{padding:14px 12px;font-weight:500;text-align:left;font-size:.7rem;letter-spacing:.04em;white-space:nowrap}
+.facility-table td{padding:12px;border-bottom:1px solid var(--border-light);vertical-align:top}
+.facility-table tbody tr{transition:background .2s}
+.facility-table tbody tr:hover{background:var(--main-faint)}
+.facility-table .fname{font-weight:600;color:var(--text);white-space:nowrap}
+
+/* 表示切替タブ（カード/テーブル） */
+.view-toggle{display:flex;gap:4px;justify-content:flex-end;margin-bottom:var(--space-sm)}
+.view-toggle button{padding:8px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:var(--fs-caption);font-weight:500;transition:all .3s;background:var(--surface)}
+.view-toggle button.active{background:var(--main);color:#fff;border-color:var(--main)}
+.view-toggle button:hover:not(.active){border-color:var(--main);color:var(--main)}
+
+/* ===================================
+   PAGE 3: TOTAL SUPPORT
+   =================================== */
+.ts-why{padding:var(--section-pad) 0;background:var(--surface)}
+.ts-why-inner{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,6vw,64px);align-items:center}
+.ts-why-visual{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl)}
+.ts-why-visual img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.ts-why-text h2{text-align:left;margin-bottom:var(--space-sm)}
+.ts-why-text .ts-quote{font-family:"Shippori Mincho",serif;font-size:1.05rem;color:var(--text);line-height:2.2;padding-left:var(--space-md);border-left:2px solid var(--accent);margin-bottom:var(--space-md)}
+.ts-why-text p{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-sm)}
+
+/* ネットワーク */
+.ts-network{padding:var(--section-pad) 0;background:var(--base)}
+.ts-network-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-lg)}
+.ts-network-card{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-lg) var(--space-md);transition:transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.ts-network-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.ts-network-card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:var(--space-sm)}
+.ts-network-card:nth-child(1) .ts-network-card-icon{background:var(--main-pale)}
+.ts-network-card:nth-child(2) .ts-network-card-icon{background:var(--accent-pale)}
+.ts-network-card h3{font-size:1.1rem;margin-bottom:var(--space-xs)}
+.ts-network-card p{font-size:var(--fs-small);color:var(--text-secondary);line-height:1.9;margin-bottom:var(--space-sm)}
+.ts-network-card .partner-tags{display:flex;flex-wrap:wrap;gap:6px}
+.ts-network-card .partner-tags span{font-size:.68rem;padding:5px 14px;border-radius:60px;background:var(--main-faint);color:var(--main-dark);font-weight:500}
+
+/* 4領域 */
+.ts-areas{padding:var(--section-pad) 0;background:var(--surface)}
+.ts-areas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-sm);margin-bottom:var(--space-lg)}
+.ts-area-card{text-align:center;padding:var(--space-lg) var(--space-sm);background:var(--base);border-radius:var(--radius-xl);transition:transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.ts-area-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.ts-area-card-num{font-family:"Cormorant Garamond",serif;font-size:.65rem;letter-spacing:.25em;color:var(--main);margin-bottom:var(--space-xs)}
+.ts-area-card-icon{font-size:2.2rem;margin-bottom:var(--space-sm);line-height:1}
+.ts-area-card h3{font-size:.95rem;margin-bottom:var(--space-xs)}
+.ts-area-card p{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.8}
+
+/* 葬儀後サポート8項目 */
+.ts-after{padding:var(--section-pad) 0;background:var(--base)}
+.ts-after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-sm)}
+.ts-after-item{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-sm);text-align:center;transition:transform var(--duration-fast) var(--ease-out)}
+.ts-after-item:hover{transform:translateY(-3px)}
+.ts-after-item-icon{font-size:1.5rem;margin-bottom:var(--space-xs)}
+.ts-after-item h4{font-family:"Shippori Mincho",serif;font-size:.82rem;margin-bottom:4px;font-weight:600}
+.ts-after-item p{font-size:.7rem;color:var(--text-secondary);line-height:1.7}
+
+/* ステップフロー */
+.ts-steps{padding:var(--section-pad) 0;background:var(--surface)}
+.ts-steps-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);position:relative}
+.ts-steps-flow::before{content:'';position:absolute;top:44px;left:15%;right:15%;height:2px;background:var(--border)}
+.ts-step{text-align:center;position:relative;z-index:1}
+.ts-step-num{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--main),var(--main-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:1.6rem;font-weight:400;margin:0 auto var(--space-md);box-shadow:var(--shadow-md);transition:transform var(--duration-fast) var(--ease-out)}
+.ts-step:hover .ts-step-num{transform:scale(1.08)}
+.ts-step h3{font-size:.95rem;margin-bottom:var(--space-xs)}
+.ts-step p{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.8;padding:0 var(--space-xs)}
+
+/* ===================================
+   PAGE 4: COLUMN / SEMINAR
+   =================================== */
+.column-layout{padding:var(--section-pad) 0;background:var(--surface)}
+.column-layout-inner{display:grid;grid-template-columns:1fr 280px;gap:var(--space-lg)}
+.column-filters{display:flex;gap:8px;margin-bottom:var(--space-md);flex-wrap:wrap}
+.column-filter{padding:8px 20px;border:1.5px solid var(--border);border-radius:60px;font-size:.78rem;cursor:pointer;transition:all .3s;background:var(--surface);font-weight:500}
+.column-filter.active{background:var(--main);color:#fff;border-color:var(--main)}
+.column-filter:hover:not(.active){border-color:var(--main);color:var(--main)}
+.article-list{display:flex;flex-direction:column;gap:var(--space-md)}
+.article-card{display:grid;grid-template-columns:220px 1fr;gap:0;background:var(--base);border-radius:var(--radius-xl);overflow:hidden;transition:transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.article-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.article-card-img{overflow:hidden}
+.article-card-img img{width:100%;height:100%;object-fit:cover;min-height:160px;transition:transform .8s var(--ease-out)}
+.article-card:hover .article-card-img img{transform:scale(1.05)}
+.article-card-body{padding:var(--space-md);display:flex;flex-direction:column;justify-content:center}
+.article-card-meta{display:flex;align-items:center;gap:10px;margin-bottom:var(--space-xs)}
+.article-card-meta .a-tag{font-size:.65rem;padding:4px 12px;border-radius:60px;font-weight:600;color:#fff}
+.a-tag-seminar{background:var(--main)}
+.a-tag-knowledge{background:var(--accent-dark)}
+.a-tag-diary{background:var(--text-muted)}
+.a-tag-case{background:var(--cta)}
+.article-card-meta .a-date{font-size:.7rem;color:var(--text-muted)}
+.article-card-body h3{font-size:.95rem;line-height:1.6;margin-bottom:var(--space-xs)}
+.article-card-body p{font-size:.8rem;color:var(--text-secondary);line-height:1.8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Sidebar */
+.column-sidebar{display:flex;flex-direction:column;gap:var(--space-md)}
+.sidebar-widget{background:var(--base);border-radius:var(--radius-xl);padding:var(--space-md)}
+.sidebar-widget h4{font-family:"Shippori Mincho",serif;font-size:.88rem;font-weight:600;margin-bottom:var(--space-sm);padding-bottom:var(--space-xs);border-bottom:1px solid var(--border)}
+.sidebar-widget ul{list-style:none}
+.sidebar-widget li{padding:8px 0;border-bottom:1px solid var(--border-light)}
+.sidebar-widget li a{font-size:.8rem;color:var(--text-secondary);transition:color .3s}
+.sidebar-widget li a:hover{color:var(--main)}
+.sidebar-banner{background:linear-gradient(135deg,var(--main),var(--main-dark));border-radius:var(--radius-xl);padding:var(--space-md);text-align:center;color:#fff}
+.sidebar-banner h4{color:#fff;border-bottom-color:rgba(255,255,255,.15);margin-bottom:var(--space-sm)}
+.sidebar-banner p{font-size:.78rem;color:rgba(255,255,255,.75);margin-bottom:var(--space-sm)}
+.sidebar-banner .btn{padding:10px 20px;font-size:.8rem;width:100%}
+
+/* ===================================
+   PAGE 5: COMPANY
+   =================================== */
+.ceo-section{padding:var(--section-pad) 0;background:var(--surface)}
+.ceo-inner{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(32px,6vw,64px);align-items:center}
+.ceo-photo{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);position:relative}
+.ceo-photo img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.ceo-photo .video-btn{position:absolute;bottom:var(--space-md);left:var(--space-md);display:flex;align-items:center;gap:10px;padding:10px 20px;background:rgba(30,33,24,.8);backdrop-filter:blur(12px);border-radius:60px;color:#fff;font-size:var(--fs-caption);font-weight:500}
+.ceo-photo .video-btn .play{width:24px;height:24px;background:var(--cta);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ceo-photo .video-btn .play::after{content:'';display:block;width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid #fff;margin-left:2px}
+.ceo-text .ceo-name{font-family:"Cormorant Garamond",serif;font-size:var(--fs-caption);color:var(--text-muted);letter-spacing:.15em;margin-bottom:2px}
+.ceo-text .ceo-name-main{font-family:"Shippori Mincho",serif;font-size:1.3rem;font-weight:700;letter-spacing:.1em;margin-bottom:var(--space-md)}
+.ceo-text .ceo-quote{font-family:"Shippori Mincho",serif;font-size:1.1rem;line-height:2.2;color:var(--text);padding-left:var(--space-md);border-left:2px solid var(--accent);margin-bottom:var(--space-md)}
+.ceo-text p{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-sm)}
+.ceo-origin{background:var(--main-faint);border-radius:var(--radius-lg);padding:var(--space-md);margin-top:var(--space-md)}
+.ceo-origin h4{font-family:"Shippori Mincho",serif;font-size:var(--fs-caption);color:var(--main);margin-bottom:4px;letter-spacing:.12em}
+.ceo-origin p{font-size:var(--fs-small);color:var(--text-secondary);font-style:italic;line-height:1.9;margin:0}
+
+/* 会社情報 */
+.company-info-section{padding:var(--section-pad) 0;background:var(--base)}
+.info-table{width:100%;max-width:800px;margin:0 auto;border-collapse:collapse}
+.info-table tr{border-bottom:1px solid var(--border-light)}
+.info-table th{text-align:left;padding:18px 20px;font-size:var(--fs-small);font-weight:500;color:var(--text-muted);width:160px;vertical-align:top;font-family:"Shippori Mincho",serif;letter-spacing:.06em}
+.info-table td{padding:18px 20px;font-size:var(--fs-body);color:var(--text)}
+
+/* スタッフ紹介 */
+.staff-section{padding:var(--section-pad) 0;background:var(--surface)}
+.staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md)}
+.staff-card{text-align:center;background:var(--base);border-radius:var(--radius-xl);overflow:hidden;transition:transform var(--duration-fast) var(--ease-out)}
+.staff-card:hover{transform:translateY(-4px)}
+.staff-card-img{overflow:hidden}
+.staff-card-img img{width:100%;aspect-ratio:1/1;object-fit:cover;transition:transform .8s var(--ease-out)}
+.staff-card:hover .staff-card-img img{transform:scale(1.05)}
+.staff-card-body{padding:var(--space-md) var(--space-sm)}
+.staff-card-body h3{font-size:1rem;margin-bottom:4px}
+.staff-card-body .staff-role{font-size:var(--fs-caption);color:var(--main);letter-spacing:.06em;margin-bottom:var(--space-sm)}
+.staff-card-body p{font-size:.78rem;color:var(--text-secondary);line-height:1.9}
+
+/* 提携先 */
+.partners-section{padding:var(--section-pad) 0;background:var(--base)}
+.partners-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-sm)}
+.partner-card{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-lg) var(--space-sm);text-align:center;transition:transform var(--duration-fast) var(--ease-out)}
+.partner-card:hover{transform:translateY(-3px)}
+.partner-card-icon{font-size:2rem;margin-bottom:var(--space-sm)}
+.partner-card h3{font-size:.88rem;margin-bottom:4px}
+.partner-card p{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.7}
+
+/* アクセス */
+.access-section{padding:var(--section-pad) 0;background:var(--surface)}
+.access-inner{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);align-items:start}
+.access-map{border-radius:var(--radius-xl);overflow:hidden;background:var(--base);height:380px;display:flex;align-items:center;justify-content:center;font-size:var(--fs-small);color:var(--text-muted);border:1px solid var(--border)}
+.access-info h3{font-size:1.1rem;margin-bottom:var(--space-sm)}
+.access-info p{font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-xs)}
+
+/* ===================================
+   PAGE 6: CONTACT
+   =================================== */
+.contact-tel{padding:var(--space-2xl) 0;background:var(--dark);text-align:center;margin-top:72px}
+.contact-tel h2{color:#fff;margin-bottom:var(--space-sm)}
+.contact-tel .tel-number{font-family:"Shippori Mincho",serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:700;color:var(--cta-light);display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:var(--space-xs)}
+.contact-tel .tel-number svg{width:32px;height:32px;fill:var(--cta-light)}
+.contact-tel .tel-time{color:rgba(232,228,220,.5);font-size:var(--fs-small);margin-bottom:var(--space-md)}
+
+.contact-form-section{padding:var(--section-pad) 0;background:var(--surface)}
+.contact-form{max-width:700px;margin:0 auto}
+.form-group{margin-bottom:var(--space-md)}
+.form-group label{display:block;font-size:var(--fs-small);font-weight:500;margin-bottom:var(--space-xs);color:var(--text)}
+.form-group label .req{font-size:.65rem;background:var(--cta);color:#fff;padding:2px 8px;border-radius:4px;margin-left:8px;font-weight:600}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 18px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:var(--fs-body);font-family:inherit;transition:border-color .3s,box-shadow .3s;background:var(--base)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--main);box-shadow:0 0 0 3px rgba(107,133,96,.1)}
+.form-group textarea{min-height:160px;resize:vertical}
+
+.contact-line{padding:var(--space-xl) 0;background:var(--base);text-align:center}
+.contact-line .line-icon{width:80px;height:80px;border-radius:var(--radius-xl);background:#06C755;display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-sm);color:#fff;font-size:2rem;font-weight:700}
+.contact-line h3{margin-bottom:var(--space-xs)}
+.contact-line p{font-size:var(--fs-body);color:var(--text-secondary);margin-bottom:var(--space-md)}
+
+.contact-guide{padding:var(--section-pad) 0;background:var(--surface)}
+.contact-guide-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,64px);align-items:center;max-width:900px;margin:0 auto}
+.contact-guide-visual{text-align:center}
+.contact-guide-visual img{max-width:200px;margin:0 auto;border-radius:var(--radius);box-shadow:var(--shadow-xl)}
+
+/* ===================================
+   FOOTER
+   =================================== */
+.site-footer{background:var(--dark);color:var(--dark-text);padding:var(--space-xl) 0 0}
+.footer-top{text-align:center;padding-bottom:var(--space-lg);border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:var(--space-lg)}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:var(--space-md)}
+.footer-logo .logo-mark{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.footer-logo .logo-text{color:var(--dark-text)}
+.footer-logo .logo-sub{color:rgba(232,228,220,.4)}
+.footer-tel-label{font-family:"Cormorant Garamond",serif;font-size:.68rem;color:var(--accent-light);letter-spacing:.2em;margin-bottom:var(--space-xs)}
+.footer-tel-number{font-family:"Shippori Mincho",serif;font-size:2rem;font-weight:700;color:#fff;letter-spacing:.06em;margin-bottom:4px}
+.footer-tel-time{font-size:var(--fs-caption);color:rgba(232,228,220,.4)}
+.footer-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-lg);margin-bottom:var(--space-lg)}
+.footer-nav-group h4{font-family:"Shippori Mincho",serif;font-size:.82rem;font-weight:600;color:#fff;margin-bottom:var(--space-sm);letter-spacing:.06em}
+.footer-nav-group a{display:block;font-size:var(--fs-caption);color:rgba(232,228,220,.5);padding:4px 0;transition:color var(--duration-fast)}
+.footer-nav-group a:hover{color:var(--accent-light)}
+.footer-bottom{text-align:center;padding:var(--space-sm) 0;border-top:1px solid rgba(255,255,255,.04)}
+.footer-bottom p{font-size:.65rem;color:rgba(232,228,220,.2)}
+
+/* SP CTA */
+.sp-fixed-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:998;background:var(--cta);box-shadow:0 -4px 24px var(--cta-glow)}
+.sp-fixed-cta a{display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:700;font-size:1rem;padding:16px}
+.sp-fixed-cta svg{width:20px;height:20px;fill:currentColor}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+@media(max-width:1024px){
+  .header-nav{display:none}
+  .plan-detail,.plan-detail.reverse{grid-template-columns:1fr;direction:ltr}
+  .checks-grid{grid-template-columns:repeat(3,1fr)}
+  .estimate-inner{grid-template-columns:1fr}
+  .own-facility-inner{grid-template-columns:1fr}
+  .ts-why-inner{grid-template-columns:1fr}
+  .ts-network-grid{grid-template-columns:1fr}
+  .ts-areas-grid{grid-template-columns:repeat(2,1fr)}
+  .ts-after-grid{grid-template-columns:repeat(2,1fr)}
+  .ts-steps-flow{grid-template-columns:repeat(2,1fr)}
+  .ts-steps-flow::before{display:none}
+  .column-layout-inner{grid-template-columns:1fr}
+  .column-sidebar{display:none}
+  .ceo-inner{grid-template-columns:1fr}
+  .staff-grid{grid-template-columns:repeat(2,1fr)}
+  .partners-grid{grid-template-columns:repeat(2,1fr)}
+  .access-inner{grid-template-columns:1fr}
+  .contact-guide-inner{grid-template-columns:1fr}
+  .footer-nav{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  :root{--section-pad:clamp(56px,10vw,80px)}
+  .site-header{padding:0 20px;height:60px}
+  .header-cta{display:none}
+  .page-hero{height:300px}
+  .page-hero-content{padding:var(--space-lg) var(--gutter)}
+  .checks-grid{grid-template-columns:1fr 1fr}
+  .ts-areas-grid{grid-template-columns:1fr}
+  .ts-after-grid{grid-template-columns:1fr 1fr}
+  .ts-steps-flow{grid-template-columns:1fr}
+  .staff-grid{grid-template-columns:1fr}
+  .partners-grid{grid-template-columns:1fr 1fr}
+  .article-card{grid-template-columns:1fr}
+  .article-card-img img{max-height:200px}
+  .sp-fixed-cta{display:block}
+  .site-footer{padding-bottom:80px}
+  .page-switcher{bottom:70px;overflow-x:auto;max-width:calc(100vw - 40px)}
+  .facility-card-grid{grid-template-columns:repeat(2,1fr)}
+  .facility-table{font-size:.68rem}
+  .facility-table th,.facility-table td{padding:8px 6px}
+  .facility-features-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  :root{--section-pad:48px;--gutter:16px}
+  .checks-grid{grid-template-columns:1fr}
+  .facility-card-grid{grid-template-columns:1fr}
+  .view-toggle{justify-content:center}
+}
+
+/* ===================================
+   PAGE: 商品ページ（WP版）
+   =================================== */
+.pp{--pp-main:#2E5A39;--pp-light:#DDEEE0;--pp-dark:#0A1A0E;--pp-cta-orange:#D94F04;--pp-gold:#C9902A}
+.pp-fv{background:var(--pp-light);padding:0}
+.pp-fv-label{display:inline-block;background:var(--pp-main);color:#fff;padding:8px 28px;font-size:12px;font-weight:700;letter-spacing:.2em;border-radius:0 0 8px 8px;margin-left:20px}
+.pp-fv-content{padding:24px 20px 32px;text-align:center}
+.pp-fv-badge{display:inline-block;background:var(--surface);border:1px solid var(--border);padding:4px 14px;font-size:12px;color:var(--text-secondary);border-radius:4px;margin-bottom:16px}
+.pp-fv-title{font-family:"Shippori Mincho",serif;font-size:clamp(1.6rem,6vw,2.2rem);font-weight:700;color:var(--pp-dark);margin-bottom:8px}
+.pp-fv-catch{font-family:"Shippori Mincho",serif;font-size:14px;color:var(--text-secondary);margin-bottom:20px;line-height:1.8}
+.pp-fv-price .tax{font-size:13px;color:var(--text-secondary)}
+.pp-fv-price .amount{font-family:"Shippori Mincho",serif;font-size:clamp(2.4rem,8vw,3.2rem);font-weight:800;color:var(--pp-dark);letter-spacing:-.02em}
+.pp-fv-price .yen{font-size:18px;color:var(--pp-dark);font-weight:700}
+.pp-discount{background:#FFF3E0;border:1px solid #FFB74D;padding:6px 16px;font-size:11px;color:#E65100;font-weight:600;display:inline-block;margin-top:8px}
+.pp-section{padding:60px 0}
+.pp-section-title{text-align:center;margin-bottom:40px}
+.pp-section-title h2{font-family:"Shippori Mincho",serif;font-size:clamp(1.4rem,5vw,1.8rem);font-weight:700;color:var(--pp-dark);letter-spacing:.08em}
+.pp-section-title::after{content:'';display:block;width:48px;height:3px;background:var(--pp-main);margin:12px auto 0}
+.pp-desc-box{background:var(--base);padding:28px 24px;border-left:4px solid var(--pp-main)}
+.pp-desc-box h3{font-family:"Shippori Mincho",serif;font-size:1.1rem;font-weight:700;color:var(--pp-dark);margin-bottom:12px}
+.pp-desc-box p{font-size:14px;line-height:2;color:var(--text-secondary)}
+.pp-keyword-tags{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+.pp-keyword-tag{background:var(--pp-light);border:1px solid var(--pp-main);color:var(--pp-main);padding:8px 20px;font-size:13px;font-weight:600;border-radius:40px}
+.pp-recommend-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pp-recommend-card{background:var(--surface);padding:24px 16px;text-align:center;border:1px solid var(--border-light)}
+.pp-recommend-card .pp-icon-area{width:80px;height:80px;margin:0 auto 12px;border-radius:50%;overflow:hidden}
+.pp-recommend-card p{font-size:13px;font-weight:600;line-height:1.6}
+.pp-cta-band{background:linear-gradient(135deg,var(--pp-main) 0%,#1B3D24 100%);padding:40px 20px;text-align:center}
+.pp-cta-band .cta-heading{font-family:"Shippori Mincho",serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px}
+.pp-cta-band .cta-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px}
+.pp-cta-buttons{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pp-cta-btn-phone{display:flex;align-items:center;gap:8px;background:var(--pp-cta-orange);color:#fff;padding:16px 32px;font-size:18px;font-weight:700;border-radius:6px;box-shadow:0 4px 16px rgba(217,79,4,.3)}
+.pp-cta-btn-form{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:16px 32px;font-size:15px;font-weight:600;border-radius:6px}
+.pp-cta-discount{margin-top:16px;background:rgba(201,144,42,.2);border:1px solid rgba(201,144,42,.4);padding:8px 20px;display:inline-block;color:#FFD54F;font-size:12px;font-weight:600}
+.pp-flow-item{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--border-light)}
+.pp-flow-step{width:48px;height:48px;background:var(--pp-main);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.pp-flow-info h4{font-family:"Shippori Mincho",serif;font-size:16px;font-weight:700;margin-bottom:4px}
+.pp-flow-info p{font-size:13px;color:var(--text-secondary);line-height:1.7}
+.pp-contents-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.pp-contents-col h3{font-family:"Shippori Mincho",serif;font-size:16px;font-weight:700;text-align:center;padding:10px;margin-bottom:16px}
+.pp-contents-col.pp-included h3{background:var(--pp-main);color:#fff}
+.pp-contents-col.pp-not-included h3{background:#888;color:#fff}
+.pp-contents-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border-light);margin-bottom:4px;font-size:13px}
+.pp-contents-item .pp-item-icon{width:36px;height:36px;background:var(--pp-light);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--pp-main)}
+.pp-contents-item.pp-excluded{opacity:.6}
+.pp-contents-item.pp-excluded .pp-item-icon{background:#eee;color:#999}
+.pp-estimate-card{background:var(--surface);border:2px solid var(--pp-main);overflow:hidden}
+.pp-estimate-header{background:var(--pp-dark);color:#fff;text-align:center;padding:14px;font-family:"Shippori Mincho",serif;font-size:16px;font-weight:700}
+.pp-estimate-body{padding:20px}
+.pp-estimate-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed var(--border);font-size:14px}
+.pp-estimate-row .label{color:var(--text-secondary)}
+.pp-estimate-row .amount{font-weight:700}
+.pp-estimate-total{display:flex;justify-content:space-between;padding:16px 0;border-top:2px solid var(--pp-main);margin-top:8px;font-size:16px;font-weight:700}
+.pp-estimate-total .amount{font-family:"Shippori Mincho",serif;font-size:20px;color:var(--pp-main)}
+.pp-estimate-subsidy{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;color:#E74C3C;font-weight:600}
+.pp-estimate-footer{background:var(--pp-dark);padding:20px;text-align:center}
+.pp-estimate-footer .label{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px}
+.pp-estimate-footer .real-cost{font-family:"Shippori Mincho",serif;font-size:36px;font-weight:800;color:#fff}
+.pp-invoice-images{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.pp-invoice-card{text-align:center}
+.pp-invoice-card .tag{font-size:12px;font-weight:600;padding:4px 12px;display:inline-block;margin-bottom:8px;border-radius:4px}
+.pp-invoice-card .tag.with-extra{background:#FFF3E0;color:#E65100}
+.pp-invoice-card .tag.no-extra{background:var(--pp-light);color:var(--pp-main)}
+.pp-faq-item{border-bottom:1px solid var(--border);padding:20px 0}
+.pp-faq-q{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
+.pp-faq-q .q-icon{width:32px;height:32px;background:var(--pp-main);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.pp-faq-q .q-text{font-family:"Shippori Mincho",serif;font-size:15px;font-weight:600;flex:1;padding-top:4px}
+.pp-faq-q .chevron{font-size:20px;color:var(--text-muted);transition:transform .2s}
+.pp-faq-a{display:none;margin-top:12px;padding-left:44px}
+.pp-faq-a.open{display:block}
+.pp-faq-a .a-icon{display:inline-flex;width:32px;height:32px;background:var(--pp-cta-orange);color:#fff;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-right:12px;vertical-align:top}
+.pp-faq-a p{display:inline;font-size:14px;line-height:1.8;color:var(--text-secondary)}
+.pp-other-plan-card{background:var(--surface);padding:20px;text-align:center;border:1px solid var(--border-light)}
+.pp-other-plan-card h4{font-family:"Shippori Mincho",serif;font-size:16px;font-weight:700;margin-top:12px}
+.pp-other-plan-card .price{font-size:18px;font-weight:800;color:var(--pp-dark);margin-top:4px}
+.pp-canva-placeholder{background:linear-gradient(135deg,#e8e4dc,#d4d0c8);border:3px dashed var(--pp-main);display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:var(--pp-main);font-weight:600;padding:4px;position:relative}
+@media(max-width:768px){.pp-recommend-cards{grid-template-columns:1fr}.pp-contents-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="/" class="header-logo">
+    <div class="logo-mark">一</div>
+    <div>
+      <div class="logo-text">ファーストリーフ</div>
+      <div class="logo-sub">FIRST LEAF Inc.</div>
+    </div>
+  </a>
+  <nav class="header-nav">
+    <a href="/plans">ご葬儀プラン</a>
+    <a href="/facilities">斎場・火葬場案内</a>
+    <a href="/support">終活・トータルサポート</a>
+    <a href="/column">コラム・セミナー</a>
+    <a href="/company">会社概要</a>
+  </nav>
+  <a href="tel:0467385617" class="header-cta">
+    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+    0467-38-5617
+  </a>
+</header>
+
+<!-- PAGE SWITCHER -->
+<div class="page-switcher">
+  <button class="active" data-page="plans">ご葬儀プラン</button>
+  <button data-page="facility">斎場・火葬場</button>
+  <button data-page="support">トータルサポート</button>
+  <button data-page="column">コラム・セミナー</button>
+  <button data-page="company">会社概要</button>
+  <button data-page="contact">お問い合わせ</button>
+  <button data-page="product03">商品ページ（WP版）</button>
+</div>
+
+<!-- ================================================================
+     PAGE 1: ご葬儀プラン
+     ================================================================ -->
+<div class="page active" id="page-plans">
+
+  <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1920&h=800&fit=crop" alt="ご葬儀プラン">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="section-label">FUNERAL PLANS</div>
+      <h1>納得して選ぶ、3つの形</h1>
+      <p>すべてのプランに、中立なプロの目と、温かな心が込められています。</p>
+    </div>
+  </div>
+
+  <!-- シンプル直葬 -->
+  <div class="plan-section">
+    <div class="container">
+      <div class="plan-detail reveal">
+        <div class="plan-detail-img">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop" alt="シンプル直葬">
+        </div>
+        <div class="plan-detail-info">
+          <div class="plan-tag plan-tag-simple">PLAN 01</div>
+          <h2>シンプル直葬</h2>
+          <div class="plan-price">10<span>万円台〜</span></div>
+          <p class="plan-desc">費用を最小限に抑えたい方へ。搬送・安置・火葬・骨壺をシンプルに、それでも一つひとつ誠実にお送りします。</p>
+          <div class="plan-includes">
+            <h4>含まれるもの</h4>
+            <ul><li>搬送</li><li>安置</li><li>火葬</li><li>骨壺</li></ul>
+          </div>
+          <a href="tel:0467385617" class="btn btn-cta">このプランについて相談する</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- お別れ火葬式 -->
+  <div class="plan-section">
+    <div class="container">
+      <div class="plan-detail reverse reveal">
+        <div class="plan-detail-img">
+          <img src="https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=800&h=600&fit=crop" alt="お別れ火葬式">
+        </div>
+        <div class="plan-detail-info">
+          <div class="plan-tag plan-tag-farewell">PLAN 02</div>
+          <h2>お別れ火葬式</h2>
+          <div class="plan-price">20<span>万円台〜</span></div>
+          <p class="plan-desc">火葬前にお花を添えて、ゆっくり対面するお時間を。大切な方との最後のひとときを穏やかに過ごせるプランです。</p>
+          <div class="plan-includes">
+            <h4>含まれるもの</h4>
+            <ul><li>搬送</li><li>安置</li><li>お別れの時間</li><li>火葬</li><li>骨壺</li><li>生花</li></ul>
+          </div>
+          <a href="tel:0467385617" class="btn btn-cta">このプランについて相談する</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 家族葬・自宅葬 -->
+  <div class="plan-section">
+    <div class="container">
+      <div class="plan-detail reveal">
+        <div class="plan-detail-img">
+          <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=800&h=600&fit=crop" alt="家族葬・自宅葬">
+        </div>
+        <div class="plan-detail-info">
+          <div class="plan-tag plan-tag-family">PLAN 03</div>
+          <h2>ご葬儀（家族葬・自宅葬）</h2>
+          <div class="plan-price">30<span>万円台〜</span></div>
+          <p class="plan-desc">親しい方々でゆっくりお別れ。マンション・団地でも対応可能な自宅葬もご相談ください。温かな家族葬をお手伝いします。</p>
+          <div class="plan-includes">
+            <h4>含まれるもの</h4>
+            <ul><li>搬送</li><li>安置</li><li>通夜式</li><li>告別式</li><li>火葬</li><li>骨壺</li><li>生花祭壇</li></ul>
+          </div>
+          <a href="tel:0467385617" class="btn btn-cta">このプランについて相談する</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5つのチェック -->
+  <div class="checks-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">5 CHECKPOINTS</div>
+        <h2>後悔しないための「5つのチェック」</h2>
+        <p>葬儀費用の見積もりで見落としがちなポイントをご確認ください。</p>
+      </div>
+      <div class="checks-grid">
+        <div class="check-item reveal stagger-1">
+          <div class="check-item-num">1</div>
+          <h3>プラン外の<br>必須項目</h3>
+          <p>ドライアイス・処置料等の追加費用が明示されていますか？</p>
+        </div>
+        <div class="check-item reveal stagger-2">
+          <div class="check-item-num">2</div>
+          <h3>安置の<br>延長代</h3>
+          <p>火葬場待ちによる高額な保管料が発生しませんか？</p>
+        </div>
+        <div class="check-item reveal stagger-3">
+          <div class="check-item-num">3</div>
+          <h3>走行距離の<br>加算</h3>
+          <p>10km単位で急激に跳ね上がる搬送費はありませんか？</p>
+        </div>
+        <div class="check-item reveal stagger-4">
+          <div class="check-item-num">4</div>
+          <h3>不要なものの<br>セット販売</h3>
+          <p>使わない備品が最初から組み込まれていませんか？</p>
+        </div>
+        <div class="check-item reveal stagger-5">
+          <div class="check-item-num">5</div>
+          <h3>不透明な<br>運営費</h3>
+          <p>「一式費用」の中身は明確に説明されていますか？</p>
+        </div>
+      </div>
+      <div class="checks-conclusion reveal">
+        <h3>ファーストリーフはすべてを明示。隠し費用はありません。</h3>
+        <p>中立なプロとして、お見積もりの一つひとつを丁寧にご説明します。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 他社見積もり査定 -->
+  <div class="estimate-section">
+    <div class="container">
+      <div class="estimate-inner">
+        <div class="estimate-visual reveal-left">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=500&fit=crop" alt="見積もり無料査定">
+        </div>
+        <div class="estimate-text reveal-right">
+          <div class="section-label">FREE ESTIMATE CHECK</div>
+          <h2>すでに見積もりを<br>お持ちの方へ</h2>
+          <p>中立な立場で、不要なオプションがないかその場で査定します。他社を検討中の方も、まずはお気軽にお電話ください。</p>
+          <a href="tel:0467385617" class="btn btn-cta">見積もり査定を依頼する</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-bar">
+    <div class="container">
+      <h2>まずはお気軽にご相談ください</h2>
+      <p>24時間365日、お電話でのご相談を承っております。</p>
+      <div class="cta-bar-actions">
+        <a href="tel:0467385617" class="btn btn-cta">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          今すぐ電話で相談する
+        </a>
+        <a href="/contact#guidebook" class="btn btn-ghost btn-arrow">無料ガイドブックを請求する</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 2: 斎場・火葬場案内
+     ================================================================ -->
+<div class="page" id="page-facility">
+
+  <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=800&fit=crop" alt="斎場・火葬場案内">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="section-label">FACILITY GUIDE</div>
+      <h1>神奈川県の<br>斎場・火葬場ガイド</h1>
+      <p>地域の施設を熟知した私たちが、最適な場所をご提案します。</p>
+    </div>
+  </div>
+
+  <!-- 自社斎場 -->
+  <div class="own-facility">
+    <div class="container">
+      <div class="own-facility-inner">
+        <div class="own-facility-gallery reveal-left">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&h=625&fit=crop" alt="ファーストリーフ自社斎場">
+          <div class="badge">&#9733; 自社斎場</div>
+        </div>
+        <div class="own-facility-info reveal-right">
+          <div class="section-label">OUR FACILITY</div>
+          <h2>ファーストリーフ<br>自社斎場</h2>
+          <p class="facility-desc">1日1組限定の貸切対応。式場利用料・安置料は0円。ゆったりとした空間で、心からのお別れを。</p>
+          <div class="facility-features-grid">
+            <div class="facility-feat"><span class="fcheck">&#10003;</span>1日1組限定・貸切</div>
+            <div class="facility-feat"><span class="fcheck">&#10003;</span>式場利用料 0円</div>
+            <div class="facility-feat"><span class="fcheck">&#10003;</span>安置料 0円</div>
+            <div class="facility-feat"><span class="fcheck">&#10003;</span>24時間・年中無休</div>
+          </div>
+          <div class="facility-addr">
+            〒253-0085 茅ヶ崎市矢畑682-10<br>
+            TEL: 0467-38-5617
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="tel:0467385617" class="btn btn-cta">電話で予約する</a>
+            <a href="#" class="btn btn-outline btn-arrow">詳しく見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- エリア別一覧 -->
+  <div class="area-tabs-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">AREA GUIDE</div>
+        <h2>エリア別 斎場・火葬場一覧</h2>
+        <p>タブを切り替えて、各エリアの施設情報をご確認ください。</p>
+      </div>
+      <div class="area-tabs">
+        <button class="area-tab active" data-area="shonan">湘南エリア<span class="area-count">4</span></button>
+        <button class="area-tab" data-area="yokohama">横浜市<span class="area-count">4</span></button>
+        <button class="area-tab" data-area="kawasaki">川崎市<span class="area-count">2</span></button>
+        <button class="area-tab" data-area="kennou">県央・県西<span class="area-count">4</span></button>
+      </div>
+
+      <!-- ビュー切替 -->
+      <div class="view-toggle">
+        <button class="active" data-view="card">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:4px"><path d="M4 5h6v6H4zm10 0h6v6h-6zM4 15h6v6H4zm10 0h6v6h-6z"/></svg>カード
+        </button>
+        <button data-view="table">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:4px"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg>テーブル
+        </button>
+      </div>
+
+      <!-- 湘南エリア -->
+      <div class="area-content active" id="area-shonan">
+        <div class="facility-card-grid">
+          <div class="fcard reveal stagger-1">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=375&fit=crop" alt="藤沢聖苑">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>藤沢聖苑</h4>
+              <p class="fcard-addr">藤沢市大鋸1251</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>公営</span><span>駐車場あり</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 10,000円 ／ 市外 80,000円</div>
+              <a href="tel:0466-22-2404" class="fcard-btn">TEL 0466-22-2404</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-2">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=375&fit=crop" alt="藤沢市斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>藤沢市斎場</h4>
+              <p class="fcard-addr">藤沢市大庭3761</p>
+              <div class="fcard-info">
+                <span>式場あり</span><span>公営</span><span>駐車場あり</span>
+              </div>
+              <div class="fcard-price">式場料：3,000円〜</div>
+              <a href="tel:0466-87-5589" class="fcard-btn">TEL 0466-87-5589</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-3">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=375&fit=crop" alt="茅ヶ崎市斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>茅ヶ崎市斎場</h4>
+              <p class="fcard-addr">茅ヶ崎市芹沢1700</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 0円 ／ 市外 80,000円｜式場料：41,900円</div>
+              <a href="tel:0467-53-1505" class="fcard-btn">TEL 0467-53-1505</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-4">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=375&fit=crop" alt="平塚市聖苑">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>平塚市聖苑</h4>
+              <p class="fcard-addr">平塚市田村9-25-2</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>公営</span><span>駐車場あり</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 0円 ／ 市外 95,000円</div>
+              <a href="tel:0463-55-1075" class="fcard-btn">TEL 0463-55-1075</a>
+            </div>
+          </div>
+        </div>
+        <table class="facility-table" style="display:none">
+          <thead>
+            <tr><th>施設名</th><th>火葬料（市内）</th><th>火葬料（市外）</th><th>式場料</th><th>住所</th><th>TEL</th><th>休場日</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fname">藤沢聖苑</td><td>10,000円</td><td>80,000円</td><td>なし</td><td>藤沢市大鋸1251</td><td>0466-22-2404</td><td>友引,1/1-3</td></tr>
+            <tr><td class="fname">藤沢市斎場</td><td>なし</td><td>なし</td><td>3,000円〜</td><td>藤沢市大庭3761</td><td>0466-87-5589</td><td>1/1-3</td></tr>
+            <tr><td class="fname">茅ヶ崎市斎場</td><td>0円</td><td>80,000円</td><td>41,900円</td><td>茅ヶ崎市芹沢1700</td><td>0467-53-1505</td><td>友引,1/1-3</td></tr>
+            <tr><td class="fname">平塚市聖苑</td><td>0円</td><td>95,000円</td><td>なし</td><td>平塚市田村9-25-2</td><td>0463-55-1075</td><td>友引,1/1-3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 横浜市 -->
+      <div class="area-content" id="area-yokohama">
+        <div class="facility-card-grid">
+          <div class="fcard reveal stagger-1">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=375&fit=crop" alt="横浜市北部斎場">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>横浜市北部斎場</h4>
+              <p class="fcard-addr">横浜市緑区長津田町</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 12,000円 ／ 市外 50,000円｜式場料：80,000円</div>
+              <a href="tel:045-921-5700" class="fcard-btn">TEL 045-921-5700</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-2">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=375&fit=crop" alt="横浜市南部斎場">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>横浜市南部斎場</h4>
+              <p class="fcard-addr">横浜市金沢区みずき町</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 12,000円 ／ 市外 50,000円｜式場料：50,000円</div>
+              <a href="tel:045-785-9411" class="fcard-btn">TEL 045-785-9411</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-3">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-9497366754035-f200968a6e72?w=600&h=375&fit=crop" alt="横浜市戸塚斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>横浜市戸塚斎場</h4>
+              <p class="fcard-addr">横浜市戸塚区鳥が丘</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 12,000円 ／ 市外 50,000円｜式場料：50,000円</div>
+              <a href="tel:045-864-7001" class="fcard-btn">TEL 045-864-7001</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-4">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=375&fit=crop" alt="横浜市久保山斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>横浜市久保山斎場</h4>
+              <p class="fcard-addr">横浜市西区元久保町</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>公営</span><span>歴史的建造物</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 12,000円 ／ 市外 50,000円</div>
+              <a href="tel:045-231-3060" class="fcard-btn">TEL 045-231-3060</a>
+            </div>
+          </div>
+        </div>
+        <table class="facility-table" style="display:none">
+          <thead>
+            <tr><th>施設名</th><th>火葬料（市内）</th><th>火葬料（市外）</th><th>式場料（市内）</th><th>住所</th><th>TEL</th><th>休場日</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fname">横浜市北部斎場</td><td>12,000円</td><td>50,000円</td><td>80,000円</td><td>横浜市緑区長津田町</td><td>045-921-5700</td><td>友引,1/1-2</td></tr>
+            <tr><td class="fname">横浜市南部斎場</td><td>12,000円</td><td>50,000円</td><td>50,000円</td><td>横浜市金沢区みずき町</td><td>045-785-9411</td><td>友引,1/1-2</td></tr>
+            <tr><td class="fname">横浜市戸塚斎場</td><td>12,000円</td><td>50,000円</td><td>50,000円</td><td>横浜市戸塚区鳥が丘</td><td>045-864-7001</td><td>友引,1/1-2</td></tr>
+            <tr><td class="fname">横浜市久保山斎場</td><td>12,000円</td><td>50,000円</td><td>なし</td><td>横浜市西区元久保町</td><td>045-231-3060</td><td>友引,1/1-2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 川崎市 -->
+      <div class="area-content" id="area-kawasaki">
+        <div class="facility-card-grid">
+          <div class="fcard reveal stagger-1">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=375&fit=crop" alt="かわさき北部斎場">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>かわさき北部斎場</h4>
+              <p class="fcard-addr">川崎市高津区下作延</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 6,750円 ／ 市外 60,000円｜式場料：45,000円〜</div>
+              <a href="tel:044-822-3171" class="fcard-btn">TEL 044-822-3171</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-2">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=375&fit=crop" alt="かわさき南部斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>かわさき南部斎場</h4>
+              <p class="fcard-addr">川崎市川崎区夜光</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 6,750円 ／ 市外 60,000円｜式場料：40,000円〜</div>
+              <a href="tel:044-277-8146" class="fcard-btn">TEL 044-277-8146</a>
+            </div>
+          </div>
+        </div>
+        <table class="facility-table" style="display:none">
+          <thead>
+            <tr><th>施設名</th><th>火葬料（市内）</th><th>火葬料（市外）</th><th>式場料</th><th>住所</th><th>TEL</th><th>休場日</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fname">かわさき北部斎場</td><td>6,750円</td><td>60,000円</td><td>45,000円〜</td><td>川崎市高津区下作延</td><td>044-822-3171</td><td>友引,1/1-3</td></tr>
+            <tr><td class="fname">かわさき南部斎場</td><td>6,750円</td><td>60,000円</td><td>40,000円〜</td><td>川崎市川崎区夜光</td><td>044-277-8146</td><td>友引,1/1-3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 県央・県西 -->
+      <div class="area-content" id="area-kennou">
+        <div class="facility-card-grid">
+          <div class="fcard reveal stagger-1">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=375&fit=crop" alt="大和斎場">
+              <span class="fcard-scale fscale-l">L ─ 大規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>大和斎場</h4>
+              <p class="fcard-addr">大和市西鶴間8-10-8</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 10,000円 ／ 市外 50,000円｜式場料：50,000円</div>
+              <a href="tel:046-264-5566" class="fcard-btn">TEL 046-264-5566</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-2">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=375&fit=crop" alt="厚木市斎場">
+              <span class="fcard-scale fscale-m">M ─ 中規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>厚木市斎場</h4>
+              <p class="fcard-addr">厚木市下古沢548</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>式場あり</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 10,000円 ／ 市外 70,000円｜式場料：60,000円</div>
+              <a href="tel:046-281-8595" class="fcard-btn">TEL 046-281-8595</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-3">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=375&fit=crop" alt="秦野斎場">
+              <span class="fcard-scale fscale-s">S ─ 小規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>秦野斎場</h4>
+              <p class="fcard-addr">秦野市曽屋1006</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 11,000円 ／ 市外 73,000円</div>
+              <a href="tel:0463-81-2052" class="fcard-btn">TEL 0463-81-2052</a>
+            </div>
+          </div>
+          <div class="fcard reveal stagger-4">
+            <div class="fcard-img">
+              <img src="https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=375&fit=crop" alt="小田原市斎場">
+              <span class="fcard-scale fscale-s">S ─ 小規模</span>
+            </div>
+            <div class="fcard-body">
+              <h4>小田原市斎場</h4>
+              <p class="fcard-addr">小田原市久野3664-8</p>
+              <div class="fcard-info">
+                <span>火葬場併設</span><span>公営</span>
+              </div>
+              <div class="fcard-price">火葬料：市内 12,000円 ／ 市外 80,000円</div>
+              <a href="tel:0465-34-9409" class="fcard-btn">TEL 0465-34-9409</a>
+            </div>
+          </div>
+        </div>
+        <table class="facility-table" style="display:none">
+          <thead>
+            <tr><th>施設名</th><th>火葬料（市内）</th><th>火葬料（市外）</th><th>式場料</th><th>住所</th><th>TEL</th><th>休場日</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fname">大和斎場</td><td>10,000円</td><td>50,000円</td><td>50,000円</td><td>大和市西鶴間8-10-8</td><td>046-264-5566</td><td>友引,1/1-3</td></tr>
+            <tr><td class="fname">厚木市斎場</td><td>10,000円</td><td>70,000円</td><td>60,000円</td><td>厚木市下古沢548</td><td>046-281-8595</td><td>友引,1/1-3</td></tr>
+            <tr><td class="fname">秦野斎場</td><td>11,000円</td><td>73,000円</td><td>なし</td><td>秦野市曽屋1006</td><td>0463-81-2052</td><td>友引,1/1</td></tr>
+            <tr><td class="fname">小田原市斎場</td><td>12,000円</td><td>80,000円</td><td>なし</td><td>小田原市久野3664-8</td><td>0465-34-9409</td><td>友引,1/1-3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <div class="container">
+      <h2>斎場選びに迷ったらお電話ください</h2>
+      <p>ご希望のエリアや人数に合わせて、最適な斎場をご提案します。</p>
+      <div class="cta-bar-actions">
+        <a href="tel:0467385617" class="btn btn-cta">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          今すぐ相談する
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 3: 終活・トータルサポート
+     ================================================================ -->
+<div class="page" id="page-support">
+
+  <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&h=800&fit=crop" alt="終活・トータルサポート">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="section-label">TOTAL SUPPORT</div>
+      <h1>一人にしない、迷わせない。</h1>
+      <p>地域の医療・介護・法務とつなぐ、一生涯の安心。</p>
+    </div>
+  </div>
+
+  <!-- なぜトータルを掲げるのか -->
+  <div class="ts-why">
+    <div class="container">
+      <div class="ts-why-inner">
+        <div class="ts-why-visual reveal-left">
+          <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=800&h=600&fit=crop" alt="チームとしての相談風景">
+        </div>
+        <div class="ts-why-text reveal-right">
+          <div class="section-label">OUR PHILOSOPHY</div>
+          <h2>なぜ、私たちは<br>「トータル」を掲げるのか？</h2>
+          <blockquote class="ts-quote">
+            葬儀の現場で私たちが目にしてきたのは、「もっと早く相談していれば」というご家族の言葉でした。
+          </blockquote>
+          <p>身元引受の問題、相続の不安、入院中の看護。これらは葬儀社だけでは解決できません。だからこそ、私たちは地域の専門職とチームを組みました。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 地域専門職ネットワーク -->
+  <div class="ts-network">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">NETWORK</div>
+        <h2>強固な「地域専門職ネットワーク」</h2>
+        <p>医療・看護・法務の各分野のプロフェッショナルと密に連携しています。</p>
+      </div>
+      <div class="ts-network-grid">
+        <div class="ts-network-card reveal stagger-1">
+          <div class="ts-network-card-icon">&#127973;</div>
+          <h3>医療・看護との連携</h3>
+          <p>湘南第一病院やエリー訪問看護ステーション様と密に連携。お身体の状況に合わせた迅速な対応が可能です。</p>
+          <div class="partner-tags">
+            <span>湘南第一病院</span>
+            <span>エリー訪問看護ステーション</span>
+          </div>
+        </div>
+        <div class="ts-network-card reveal stagger-2">
+          <div class="ts-network-card-icon">&#9878;</div>
+          <h3>法務・士業との連携</h3>
+          <p>信頼できる行政書士・司法書士と提携。おひとりさまの身元引受や、死後事務委任、相続手続きも一気通貫でサポートします。</p>
+          <div class="partner-tags">
+            <span>提携行政書士</span>
+            <span>提携司法書士</span>
+            <span>弁護士</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4つのサポート領域 -->
+  <div class="ts-areas">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">4 PILLARS</div>
+        <h2>私たちができる<br>4つのサポート</h2>
+      </div>
+      <div class="ts-areas-grid">
+        <div class="ts-area-card reveal stagger-1">
+          <div class="ts-area-card-num">SUPPORT 01</div>
+          <div class="ts-area-card-icon">&#128101;</div>
+          <h3>身元引受・<br>生活支援</h3>
+          <p>施設入居時や入院時の保証人、日々の生活相談をサポートします。</p>
+        </div>
+        <div class="ts-area-card reveal stagger-2">
+          <div class="ts-area-card-num">SUPPORT 02</div>
+          <div class="ts-area-card-icon">&#128218;</div>
+          <h3>終活セミナー・<br>個別相談</h3>
+          <p>定期的なセミナー開催を通じた情報提供と、個別のご相談対応。</p>
+        </div>
+        <div class="ts-area-card reveal stagger-3">
+          <div class="ts-area-card-num">SUPPORT 03</div>
+          <div class="ts-area-card-icon">&#127809;</div>
+          <h3>適正価格の<br>葬儀施行</h3>
+          <p>1日1組限定。ご家族に寄り添う温かなお別れをお手伝いします。</p>
+        </div>
+        <div class="ts-area-card reveal stagger-4">
+          <div class="ts-area-card-num">SUPPORT 04</div>
+          <div class="ts-area-card-icon">&#128196;</div>
+          <h3>葬儀後の<br>事務手続き</h3>
+          <p>役所への各種届出、遺品整理、不動産・相続の相談窓口。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 葬儀後サポート8項目 -->
+  <div class="ts-after">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">AFTER SUPPORT</div>
+        <h2>火葬後の「さて、どうしよう？」を<br>解決する</h2>
+        <p>葬儀が終わった後も、実務のプロとしてサポートします。</p>
+      </div>
+      <div class="ts-after-grid">
+        <div class="ts-after-item reveal stagger-1">
+          <div class="ts-after-item-icon">&#128230;</div>
+          <h4>遺品整理</h4>
+          <p>施設・ご自宅の荷物整理、清掃を手配</p>
+        </div>
+        <div class="ts-after-item reveal stagger-2">
+          <div class="ts-after-item-icon">&#127800;</div>
+          <h4>納骨・供養</h4>
+          <p>海洋散骨・樹木葬など供養先の提案</p>
+        </div>
+        <div class="ts-after-item reveal stagger-3">
+          <div class="ts-after-item-icon">&#128293;</div>
+          <h4>火葬代理</h4>
+          <p>立ち会えない方に代わり収骨・お届け</p>
+        </div>
+        <div class="ts-after-item reveal stagger-4">
+          <div class="ts-after-item-icon">&#128221;</div>
+          <h4>諸手続きガイド</h4>
+          <p>年金・保険・公共料金の解約手順</p>
+        </div>
+        <div class="ts-after-item reveal stagger-1">
+          <div class="ts-after-item-icon">&#128591;</div>
+          <h4>仏壇・手元供養</h4>
+          <p>今の住まいに合う供養品の選定</p>
+        </div>
+        <div class="ts-after-item reveal stagger-2">
+          <div class="ts-after-item-icon">&#127970;</div>
+          <h4>相続の窓口</h4>
+          <p>司法書士等へスムーズに接続</p>
+        </div>
+        <div class="ts-after-item reveal stagger-3">
+          <div class="ts-after-item-icon">&#9993;</div>
+          <h4>香典返し・喪中</h4>
+          <p>喪中ハガキや香典返しの代行</p>
+        </div>
+        <div class="ts-after-item reveal stagger-4">
+          <div class="ts-after-item-icon">&#127968;</div>
+          <h4>原状回復</h4>
+          <p>賃貸クリーニング・リフォーム手配</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ステップフロー -->
+  <div class="ts-steps">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">FLOW</div>
+        <h2>サポート開始までのステップ</h2>
+      </div>
+      <div class="ts-steps-flow">
+        <div class="ts-step reveal stagger-1">
+          <div class="ts-step-num">1</div>
+          <h3>無料相談</h3>
+          <p>今感じている不安をお話しください</p>
+        </div>
+        <div class="ts-step reveal stagger-2">
+          <div class="ts-step-num">2</div>
+          <h3>専門家のご紹介</h3>
+          <p>必要に応じて提携の病院・士業をご紹介</p>
+        </div>
+        <div class="ts-step reveal stagger-3">
+          <div class="ts-step-num">3</div>
+          <h3>プランの策定</h3>
+          <p>あなた専用の安心計画を作成</p>
+        </div>
+        <div class="ts-step reveal stagger-4">
+          <div class="ts-step-num">4</div>
+          <h3>一生涯のパートナーへ</h3>
+          <p>定期的な訪問・電話で繋がり続ける</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <div class="container">
+      <h2>まずは話を聞いてみる</h2>
+      <p>ハードルの低い無料相談から始めてみませんか。</p>
+      <div class="cta-bar-actions">
+        <a href="tel:0467385617" class="btn btn-cta">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          無料相談する
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 4: コラム・セミナー
+     ================================================================ -->
+<div class="page" id="page-column">
+
+  <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=1920&h=800&fit=crop" alt="コラム・セミナー">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="section-label">COLUMN &amp; SEMINAR</div>
+      <h1>知っておきたい、<br>葬儀と終活のこと</h1>
+      <p>セミナーレポートや豆知識など、お役立ち情報を発信しています。</p>
+    </div>
+  </div>
+
+  <div class="column-layout">
+    <div class="container">
+      <div class="column-layout-inner">
+        <div>
+          <div class="column-filters">
+            <button class="column-filter active">すべて</button>
+            <button class="column-filter">セミナー報告</button>
+            <button class="column-filter">葬儀の豆知識</button>
+            <button class="column-filter">代表日記</button>
+            <button class="column-filter">事例紹介</button>
+          </div>
+          <div class="article-list">
+            <div class="article-card reveal">
+              <div class="article-card-img">
+                <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=480&h=320&fit=crop" alt="">
+              </div>
+              <div class="article-card-body">
+                <div class="article-card-meta">
+                  <span class="a-tag a-tag-seminar">セミナー報告</span>
+                  <span class="a-date">2026.02.20</span>
+                </div>
+                <h3>行政書士と共催「終活セミナー」第3回を開催しました</h3>
+                <p>身元引受と死後事務委任について、実際の事例を交えてわかりやすく解説。参加者の質問にもお答えしました。</p>
+              </div>
+            </div>
+            <div class="article-card reveal">
+              <div class="article-card-img">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=480&h=320&fit=crop" alt="">
+              </div>
+              <div class="article-card-body">
+                <div class="article-card-meta">
+                  <span class="a-tag a-tag-knowledge">葬儀の豆知識</span>
+                  <span class="a-date">2026.02.15</span>
+                </div>
+                <h3>「葬儀費用の相場」は信じていいの？知っておきたい5つのポイント</h3>
+                <p>ネットで見かける葬儀費用の「平均額」。実はその数字だけでは判断できない理由を解説します。</p>
+              </div>
+            </div>
+            <div class="article-card reveal">
+              <div class="article-card-img">
+                <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=480&h=320&fit=crop" alt="">
+              </div>
+              <div class="article-card-body">
+                <div class="article-card-meta">
+                  <span class="a-tag a-tag-diary">代表日記</span>
+                  <span class="a-date">2026.02.10</span>
+                </div>
+                <h3>「おひとりさま」のお見送りで感じたこと</h3>
+                <p>身寄りのない方の葬儀を担当した時のこと。私たちにできることの意味を改めて考えさせられました。</p>
+              </div>
+            </div>
+            <div class="article-card reveal">
+              <div class="article-card-img">
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=480&h=320&fit=crop" alt="">
+              </div>
+              <div class="article-card-body">
+                <div class="article-card-meta">
+                  <span class="a-tag a-tag-case">事例紹介</span>
+                  <span class="a-date">2026.02.05</span>
+                </div>
+                <h3>80万円の見積もりを約20万円削減 ─ 中立査定の実例</h3>
+                <p>他社から提示された見積もりに違和感を覚えたご家族。私たちのプロの目で中立に査定した結果をご紹介します。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column-sidebar">
+          <div class="sidebar-widget">
+            <h4>最新記事</h4>
+            <ul>
+              <li><a href="#">終活セミナー第3回を開催しました</a></li>
+              <li><a href="#">葬儀費用の相場の真実</a></li>
+              <li><a href="#">おひとりさまのお見送り</a></li>
+              <li><a href="#">中立査定で20万円削減の実例</a></li>
+              <li><a href="#">自宅葬という選択肢</a></li>
+            </ul>
+          </div>
+          <div class="sidebar-banner">
+            <h4>終活セミナー開催中</h4>
+            <p>行政書士との共催で、身元引受・相続について学べます。</p>
+            <a href="tel:0467385617" class="btn btn-cta" style="font-size:.78rem">参加を申し込む</a>
+          </div>
+          <div class="sidebar-banner" style="background:linear-gradient(135deg,var(--accent-dark),var(--accent))">
+            <h4>無料ガイドブック</h4>
+            <p>葬儀社を決める前にお読みください。</p>
+            <a href="/contact#guidebook" class="btn btn-ghost" style="font-size:.78rem">請求する</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 5: 会社概要
+     ================================================================ -->
+<div class="page" id="page-company">
+
+  <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1920&h=800&fit=crop" alt="会社概要">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="section-label">ABOUT US</div>
+      <h1>ファーストリーフについて</h1>
+      <p>静かに、やさしく、確かに。中立な立場で寄り添い続けます。</p>
+    </div>
+  </div>
+
+  <!-- 代表挨拶 -->
+  <div class="ceo-section">
+    <div class="container">
+      <div class="ceo-inner">
+        <div class="ceo-photo reveal-left">
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop" alt="代表 大石 康太">
+          <a href="#" class="video-btn">
+            <div class="play"></div>
+            代表メッセージを再生
+          </a>
+        </div>
+        <div class="ceo-text reveal-right">
+          <div class="section-label">GREETING</div>
+          <div class="ceo-name">Representative Director</div>
+          <div class="ceo-name-main">大石 康太</div>
+          <blockquote class="ceo-quote">
+            何が分からないのか、それすら分からない。<br>その不安を、まずは私たちに預けてください。
+          </blockquote>
+          <p>私は葬儀社の人間ではなく、ご遺族の立場に立つ中立なパートナーです。深い悲しみと混乱の中にいる時こそ、まずは「落ち着くための時間」を一緒に作りましょう。</p>
+          <div class="ceo-origin">
+            <h4>社名の由来 ── First Leaf</h4>
+            <p>ファーストリーフ（一葉）のように、静かに、やさしく、そして確かに。医療・介護・ご家族をつなぎ、中立で誠実な立場から支えます。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会社情報 -->
+  <div class="company-info-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">COMPANY INFO</div>
+        <h2>会社情報</h2>
+      </div>
+      <table class="info-table reveal">
+        <tr><th>社名</th><td>株式会社ファーストリーフ</td></tr>
+        <tr><th>代表者</th><td>大石 康太</td></tr>
+        <tr><th>所在地</th><td>〒253-0085 神奈川県茅ヶ崎市矢畑682-10</td></tr>
+        <tr><th>電話番号</th><td>0467-38-5617（24時間365日対応）</td></tr>
+        <tr><th>事業内容</th><td>葬儀プロデュース・終活支援・身元引受・トータルライフサポート</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- スタッフ紹介 -->
+  <div class="staff-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">OUR TEAM</div>
+        <h2>スタッフ紹介</h2>
+        <p>一人ひとりが、ご家族の「味方」として心を込めて対応します。</p>
+      </div>
+      <div class="staff-grid">
+        <div class="staff-card reveal stagger-1">
+          <div class="staff-card-img">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop" alt="スタッフ">
+          </div>
+          <div class="staff-card-body">
+            <h3>大石 康太</h3>
+            <div class="staff-role">代表取締役</div>
+            <p>「ご遺族の味方」として、中立な立場から最適なサポートを提供します。</p>
+          </div>
+        </div>
+        <div class="staff-card reveal stagger-2">
+          <div class="staff-card-img">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop" alt="スタッフ">
+          </div>
+          <div class="staff-card-body">
+            <h3>スタッフ名</h3>
+            <div class="staff-role">葬祭ディレクター</div>
+            <p>ご家族の想いに耳を傾け、一つひとつ丁寧にお手伝いします。</p>
+          </div>
+        </div>
+        <div class="staff-card reveal stagger-3">
+          <div class="staff-card-img">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop" alt="スタッフ">
+          </div>
+          <div class="staff-card-body">
+            <h3>スタッフ名</h3>
+            <div class="staff-role">終活コーディネーター</div>
+            <p>生前からのご相談に対応。安心できる計画づくりをお手伝いします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提携先ネットワーク -->
+  <div class="partners-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">PARTNERS</div>
+        <h2>提携先ネットワーク</h2>
+        <p>地域の専門家と手を取り合い、ご家族を支えます。</p>
+      </div>
+      <div class="partners-grid">
+        <div class="partner-card reveal stagger-1">
+          <div class="partner-card-icon">&#127973;</div>
+          <h3>湘南第一病院</h3>
+          <p>地域医療との密な連携体制</p>
+        </div>
+        <div class="partner-card reveal stagger-2">
+          <div class="partner-card-icon">&#128137;</div>
+          <h3>エリー訪問看護<br>ステーション</h3>
+          <p>在宅ケアのサポート連携</p>
+        </div>
+        <div class="partner-card reveal stagger-3">
+          <div class="partner-card-icon">&#9878;</div>
+          <h3>提携行政書士<br>事務所</h3>
+          <p>身元引受・死後事務委任</p>
+        </div>
+        <div class="partner-card reveal stagger-4">
+          <div class="partner-card-icon">&#128218;</div>
+          <h3>提携司法書士<br>事務所</h3>
+          <p>相続・不動産手続き</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- アクセス -->
+  <div class="access-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">ACCESS</div>
+        <h2>アクセス</h2>
+      </div>
+      <div class="access-inner reveal">
+        <div class="access-map">
+          Google Maps 埋め込み<br>（茅ヶ崎市矢畑682-10）
+        </div>
+        <div class="access-info">
+          <h3>ファーストリーフ 自社斎場</h3>
+          <p>〒253-0085<br>神奈川県茅ヶ崎市矢畑682-10</p>
+          <p>TEL: 0467-38-5617</p>
+          <p>24時間365日対応・年中無休</p>
+          <div style="margin-top:var(--space-md)">
+            <a href="tel:0467385617" class="btn btn-cta">お電話でのお問い合わせ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 6: お問い合わせ
+     ================================================================ -->
+<div class="page" id="page-contact">
+
+  <!-- 電話（最優先） -->
+  <div class="contact-tel">
+    <div class="container">
+      <div class="section-label" style="color:rgba(255,255,255,.5);justify-content:center">
+        <span style="background:rgba(255,255,255,.2)" class="section-label::before"></span>CONTACT
+      </div>
+      <h2>24時間365日、まずはお電話ください</h2>
+      <a href="tel:0467385617" class="tel-number">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        0467-38-5617
+      </a>
+      <div class="tel-time">24時間受付・通話無料 ─ お気軽にご相談ください</div>
+    </div>
+  </div>
+
+  <!-- メールフォーム -->
+  <div class="contact-form-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <div class="section-label">MAIL FORM</div>
+        <h2>メールでのお問い合わせ</h2>
+        <p>以下のフォームからもご相談を承っております。</p>
+      </div>
+      <form class="contact-form reveal">
+        <div class="form-group">
+          <label>お名前 <span class="req">必須</span></label>
+          <input type="text" placeholder="山田 太郎">
+        </div>
+        <div class="form-group">
+          <label>お電話番号 <span class="req">必須</span></label>
+          <input type="tel" placeholder="090-1234-5678">
+        </div>
+        <div class="form-group">
+          <label>メールアドレス</label>
+          <input type="email" placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label>ご相談内容 <span class="req">必須</span></label>
+          <select>
+            <option>選択してください</option>
+            <option>葬儀のご相談</option>
+            <option>事前相談・お見積もり</option>
+            <option>終活に関するご相談</option>
+            <option>セミナーについて</option>
+            <option>ガイドブックの請求</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>詳細・ご質問など</label>
+          <textarea placeholder="ご自由にご記入ください"></textarea>
+        </div>
+        <div style="text-align:center;margin-top:var(--space-md)">
+          <button type="submit" class="btn btn-cta" style="padding:18px 64px;font-size:.92rem">送信する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- LINE -->
+  <div class="contact-line">
+    <div class="container reveal">
+      <div class="line-icon">L</div>
+      <h3>LINEでもご相談いただけます</h3>
+      <p>お気軽にメッセージをお送りください。スタッフが対応いたします。</p>
+      <a href="#" class="btn btn-outline btn-arrow">友だち追加する</a>
+    </div>
+  </div>
+
+  <!-- ガイドブック請求 -->
+  <div class="contact-guide">
+    <div class="container">
+      <div class="contact-guide-inner">
+        <div class="contact-guide-visual reveal-left">
+          <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=420&fit=crop" alt="ガイドブック">
+        </div>
+        <div class="reveal-right">
+          <div class="section-label">GUIDEBOOK</div>
+          <h2>無料ガイドブックの<br>郵送をご希望の方</h2>
+          <p style="font-size:var(--fs-body);color:var(--text-secondary);line-height:2;margin-bottom:var(--space-md)">「葬儀社を、決める前に。」をテーマにした安心ガイドブックを無料でお届けします。</p>
+          <form>
+            <div class="form-group">
+              <label>お名前 <span class="req">必須</span></label>
+              <input type="text" placeholder="山田 太郎">
+            </div>
+            <div class="form-group">
+              <label>郵送先住所 <span class="req">必須</span></label>
+              <input type="text" placeholder="〒253-0085 神奈川県茅ヶ崎市...">
+            </div>
+            <div class="form-group">
+              <label>お電話番号 <span class="req">必須</span></label>
+              <input type="tel" placeholder="090-1234-5678">
+            </div>
+            <button type="submit" class="btn btn-cta" style="width:100%;padding:16px">ガイドブックを請求する</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 7: 商品ページ（WordPress版デモ — PLAN 03 お別れ火葬式）
+     ================================================================ -->
+<div class="page pp" id="page-product03">
+
+  <!-- FV -->
+  <section class="pp-fv" style="margin-top:72px">
+    <div class="pp-fv-label">PLAN 03</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0; align-items:center; padding:16px 20px 0;">
+      <img src="../gmb-plans/public/images/fv/plan03-owakare.png" alt="お別れ火葬式 プラン概要" style="width:100%;max-width:300px;margin:0 auto;">
+      <img src="../gmb-plans/public/images/S__58425361_0.jpg" alt="お別れ火葬式のイメージ" style="width:100%;aspect-ratio:4/3;object-fit:cover;box-shadow:0 8px 32px rgba(0,0,0,.12);">
+    </div>
+    <div class="pp-fv-content">
+      <div class="pp-fv-badge">1〜10名ほど</div>
+      <h1 class="pp-fv-title">お別れ火葬式</h1>
+      <p class="pp-fv-catch">安置所にご家族が集合し、<br>お花に囲まれた空間で<br>故人様とゆっくりお別れ</p>
+      <div class="pp-fv-price">
+        <span class="tax">税込</span>
+        <span class="amount">275,000</span>
+        <span class="yen">円〜</span>
+      </div>
+      <div class="pp-discount">【公式サイト限定】事前相談で 10,000円割引 実施中</div>
+    </div>
+  </section>
+
+  <!-- プラン概要 -->
+  <section class="pp-section" style="background:var(--surface)">
+    <div class="container">
+      <div class="pp-section-title"><h2>お別れ火葬式とは？</h2></div>
+      <div class="pp-desc-box">
+        <h3>直葬では物足りない方へ、穏やかなお別れの時間</h3>
+        <p>安置所にご家族が集合し、お花に囲まれた空間で故人様とゆっくりお別れいただくプランです。お坊さんを呼ぶことも可能。直葬では物足りないけれど、大掛かりな式は不要という方に選ばれています。1日葬のちょっと手前、穏やかなお別れの時間を大切にした形です。</p>
+      </div>
+      <div class="pp-keyword-tags">
+        <span class="pp-keyword-tag">お花に囲まれたお別れ</span>
+        <span class="pp-keyword-tag">少人数・穏やか</span>
+        <span class="pp-keyword-tag">費用を抑えつつ丁寧に</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- こんな方におすすめ -->
+  <section class="pp-section" style="background:var(--base)">
+    <div class="container">
+      <div class="pp-section-title"><h2>こんな方におすすめ</h2></div>
+      <div class="pp-recommend-cards">
+        <div class="pp-recommend-card">
+          <div class="pp-icon-area"><img src="../gmb-plans/public/images-LP/img_worry_04.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+          <p>お花に囲まれて<br>お別れの時間を<br>持ちたい方</p>
+        </div>
+        <div class="pp-recommend-card">
+          <div class="pp-icon-area"><img src="../gmb-plans/public/images-LP/img_worry_01.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+          <p>少人数で穏やかに<br>お見送りしたい方</p>
+        </div>
+        <div class="pp-recommend-card">
+          <div class="pp-icon-area"><img src="../gmb-plans/public/images-LP/img_worry_07.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+          <p>費用は抑えたいが<br>直葬では物足りない方</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA帯 1 -->
+  <section class="pp-cta-band">
+    <p class="cta-heading">後悔のないお見送りのために</p>
+    <p class="cta-sub">何から始めればいいかわからない方も、まずはご相談ください</p>
+    <div class="pp-cta-buttons">
+      <a href="tel:0467385617" class="pp-cta-btn-phone">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        0467-38-5617
+      </a>
+      <a href="https://first-leaf.jp/contact/" target="_blank" rel="noopener noreferrer" class="pp-cta-btn-form">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        フォームで問い合わせる
+      </a>
+    </div>
+    <div class="pp-cta-discount">【公式サイト限定】事前相談で 10,000円割引 実施中</div>
+  </section>
+
+  <!-- 葬儀の流れ -->
+  <section class="pp-section" style="background:var(--surface)">
+    <div class="container">
+      <div class="pp-section-title"><h2>葬儀の流れ</h2></div>
+      <div class="pp-flow-item">
+        <div class="pp-flow-step">01</div>
+        <div class="pp-flow-info"><h4>お電話・ご連絡</h4><p>24時間365日受付 通話料無料です。もしもの時が来てしまったら、0467-38-5617 へお電話ください。状況を伺い、すぐにお迎えの手配をいたします。</p></div>
+      </div>
+      <div style="margin:16px 0;overflow:hidden;border-radius:4px;">
+        <img src="../gmb-plans/public/images/後半パート_103.jpg" alt="お別れの様子" style="width:100%;height:180px;object-fit:cover;">
+      </div>
+      <div class="pp-flow-item">
+        <div class="pp-flow-step">02</div>
+        <div class="pp-flow-info"><h4>お迎え・ご安置</h4><p>寝台車で病院・施設へお迎えに上がり、安置所へお連れします。</p></div>
+      </div>
+      <div class="pp-flow-item">
+        <div class="pp-flow-step">03</div>
+        <div class="pp-flow-info"><h4>打ち合わせ</h4><p>お花の種類、お別れの時間の過ごし方など、ご希望を丁寧に伺います。</p></div>
+      </div>
+      <div class="pp-flow-item">
+        <div class="pp-flow-step">04</div>
+        <div class="pp-flow-info"><h4>お別れの時間</h4><p>安置所にご家族が集合。生花をお棺に添え、故人様との最後のお時間をお過ごしいただきます。</p></div>
+      </div>
+      <div class="pp-flow-item" style="border-bottom:none;">
+        <div class="pp-flow-step">05</div>
+        <div class="pp-flow-info"><h4>ご出棺・火葬</h4><p>お花に囲まれた状態で火葬場へ。火葬・ご収骨を行います。</p></div>
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <a href="tel:0467385617" style="display:inline-flex;align-items:center;gap:8px;background:var(--pp-cta-orange);color:#fff;padding:14px 28px;font-size:15px;font-weight:700;border-radius:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          今すぐお電話で相談する
+        </a>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">24時間365日受付 通話料無料</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- プランの内容 -->
+  <section class="pp-section" style="background:var(--base)">
+    <div class="container">
+      <div class="pp-section-title"><h2>お別れ火葬式の内容</h2></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px;">
+        <div style="overflow:hidden;border-radius:6px;"><img src="../gmb-plans/public/images/S__58425374_0.jpg" alt="お別れ火葬式の祭壇" style="width:100%;height:140px;object-fit:cover;"></div>
+        <div style="overflow:hidden;border-radius:6px;"><img src="../gmb-plans/public/images/祭壇（黄色）_32.JPG" alt="生花祭壇" style="width:100%;height:140px;object-fit:cover;"></div>
+      </div>
+      <div class="pp-contents-grid">
+        <div class="pp-contents-col pp-included">
+          <h3>プランに<u>含まれる</u>もの</h3>
+          <p style="font-size:12px;font-weight:600;color:var(--pp-main);margin:12px 0 6px;padding-left:4px;">搬送・安置</p>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128663;</div><span>寝台車によるお迎え</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128663;</div><span>寝台車による搬送</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128719;</div><span>安置料（1日分）</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#10052;</div><span>ドライアイス（1回分）</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128367;</div><span>枕飾り一式</span></div>
+          <p style="font-size:12px;font-weight:600;color:var(--pp-main);margin:16px 0 6px;padding-left:4px;">お別れ・装飾</p>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128338;</div><span>お別れのお時間（30分〜1時間）</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#127800;</div><span>生花（お棺に添える花束）</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#9904;</div><span>お棺（布張り）</span></div>
+          <p style="font-size:12px;font-weight:600;color:var(--pp-main);margin:16px 0 6px;padding-left:4px;">火葬・収骨</p>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#9898;</div><span>骨壺</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128591;</div><span>収骨</span></div>
+          <p style="font-size:12px;font-weight:600;color:var(--pp-main);margin:16px 0 6px;padding-left:4px;">手続き・サポート</p>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128196;</div><span>死亡届の届出代行</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128196;</div><span>火葬許可証の取得</span></div>
+          <div class="pp-contents-item"><div class="pp-item-icon">&#128100;</div><span>担当スタッフによるサポート</span></div>
+        </div>
+        <div class="pp-contents-col pp-not-included">
+          <h3>プランに<u>含まれない</u>もの</h3>
+          <div class="pp-contents-item pp-excluded"><div class="pp-item-icon">&#10060;</div><span>火葬料金（地域により異なる）</span></div>
+          <div class="pp-contents-item pp-excluded"><div class="pp-item-icon">&#10060;</div><span>通夜式</span></div>
+          <div class="pp-contents-item pp-excluded"><div class="pp-item-icon">&#10060;</div><span>告別式での読経</span></div>
+          <div class="pp-contents-item pp-excluded"><div class="pp-item-icon">&#10060;</div><span>料理・返礼品</span></div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:16px;">※搬送距離が30kmを超える場合、追加料金が発生する場合があります<br>※火葬料は地域・自治体により異なります<br>※生花は季節により内容が変わる場合があります</p>
+    </div>
+  </section>
+
+  <!-- ファーストリーフの強み -->
+  <section class="pp-section" style="background:var(--surface);text-align:center;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+        <div style="overflow:hidden;border-radius:12px;"><img src="../gmb-plans/public/images/大石さん宣材写真8.jpg" alt="代表 大石" style="width:100%;height:200px;object-fit:cover;object-position:top;"></div>
+        <div style="overflow:hidden;border-radius:12px;"><img src="../gmb-plans/public/images/葬儀屋スタッフ_10.JPG" alt="ファーストリーフ スタッフ" style="width:100%;height:200px;object-fit:cover;"></div>
+      </div>
+      <h2 style="font-family:'Shippori Mincho',serif;font-size:1.3rem;font-weight:700;color:var(--pp-dark);margin-bottom:12px;">なぜファーストリーフが選ばれるのか</h2>
+      <p style="font-size:14px;color:var(--text-secondary);line-height:2;">面会火葬式の内容に加え、安置所でのお別れの時間（30分〜1時間）と、お棺に添える生花をセットにしたプランです。<br>中立な立場でご遺族に寄り添い、必要なものだけを含めた適正価格でご提供しています。</p>
+    </div>
+  </section>
+
+  <!-- CTA帯 2 -->
+  <section class="pp-cta-band">
+    <p class="cta-heading">後悔のないお見送りのために</p>
+    <p class="cta-sub">何から始めればいいかわからない方も、まずはご相談ください</p>
+    <div class="pp-cta-buttons">
+      <a href="tel:0467385617" class="pp-cta-btn-phone"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg> 0467-38-5617</a>
+      <a href="https://first-leaf.jp/contact/" target="_blank" rel="noopener noreferrer" class="pp-cta-btn-form"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg> フォームで問い合わせる</a>
+    </div>
+    <div class="pp-cta-discount">【公式サイト限定】事前相談で 10,000円割引 実施中</div>
+  </section>
+
+  <!-- 商談シーン帯 -->
+  <div style="overflow:hidden;height:180px;">
+    <img src="../gmb-plans/public/images/商談シーン_34.JPG" alt="ご相談の様子" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 85%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 85%,transparent 100%);">
+  </div>
+
+  <!-- お見積り例 -->
+  <section class="pp-section" style="background:var(--surface)">
+    <div class="container">
+      <div class="pp-section-title"><h2>お別れ火葬式のお見積り例</h2></div>
+      <p style="text-align:center;font-size:13px;color:var(--text-secondary);margin-bottom:24px;">実際に、お客様にお渡しした請求書です。</p>
+      <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;">↓↓タップで拡大↓↓</p>
+      <div class="pp-invoice-images">
+        <div class="pp-invoice-card">
+          <span class="tag with-extra">お別れ火葬式<br>追加料金あり</span>
+          <div class="pp-canva-placeholder" style="height:200px;">実際の請求書画像<br><small>CANVA or スキャン</small></div>
+        </div>
+        <div class="pp-invoice-card">
+          <span class="tag no-extra">お別れ火葬式<br>追加料金なし</span>
+          <div class="pp-canva-placeholder" style="height:200px;">実際の請求書画像<br><small>CANVA or スキャン</small></div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;">※個人情報は伏せさせていただいております。</p>
+      <div class="pp-estimate-card" style="margin-top:32px;">
+        <div class="pp-estimate-header">お別れ火葬式 お見積り例</div>
+        <div class="pp-estimate-body">
+          <div class="pp-estimate-row"><span class="label">プラン基本料金（税込）</span><span class="amount">275,000円</span></div>
+          <div class="pp-estimate-row"><span class="label">火葬料金（横浜市民の場合・非課税）</span><span class="amount">12,000円</span></div>
+          <div class="pp-estimate-total"><span>お支払い総額</span><span class="amount">287,000円</span></div>
+          <div class="pp-estimate-subsidy"><span>葬祭費給付金（横浜市）</span><span>-50,000円</span></div>
+        </div>
+        <div class="pp-estimate-footer">
+          <div class="label">実質ご負担額</div>
+          <div class="real-cost">237,000円</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:14px;color:var(--text-secondary);margin-top:24px;line-height:2;">費用の相場は平均120万円（総務省調べ）<br>ファーストリーフなら、お花に囲まれたお別れの葬儀が<br><strong style="color:var(--pp-main);font-size:18px;">実質 237,000円</strong> で実現できます。</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">※火葬料金は地域により異なります<br>※葬祭費の給付額は自治体により異なります</p>
+    </div>
+  </section>
+
+  <!-- 参列イメージ帯 -->
+  <div style="overflow:hidden;height:200px;position:relative;">
+    <img src="../gmb-plans/public/images/参列イメージ_9.JPG" alt="参列のイメージ" style="width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 85%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 85%,transparent 100%);">
+    <div style="position:absolute;bottom:16px;left:0;right:0;text-align:center;">
+      <span style="font-family:'Shippori Mincho',serif;font-size:18px;font-weight:700;color:var(--pp-dark);background:rgba(255,255,255,.75);backdrop-filter:blur(6px);padding:10px 28px;">大切な方との、最後のお時間を</span>
+    </div>
+  </div>
+
+  <!-- よくあるご質問 -->
+  <section class="pp-section" style="background:var(--surface)">
+    <div class="container">
+      <div class="pp-section-title"><h2>よくあるご質問</h2></div>
+      <div class="pp-faq-item">
+        <div class="pp-faq-q" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.chevron').style.transform=this.nextElementSibling.classList.contains('open')?'rotate(180deg)':'';">
+          <span class="q-icon">Q</span><span class="q-text">お別れの時間はどれくらいですか？</span><span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="pp-faq-a"><span class="a-icon">A</span><p>通常30分〜1時間程度をお取りしています。ご要望に応じて調整も可能です。</p></div>
+      </div>
+      <div class="pp-faq-item">
+        <div class="pp-faq-q" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.chevron').style.transform=this.nextElementSibling.classList.contains('open')?'rotate(180deg)':'';">
+          <span class="q-icon">Q</span><span class="q-text">お花の種類は選べますか？</span><span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="pp-faq-a"><span class="a-icon">A</span><p>はい、季節のお花や故人様がお好きだったお花をご指定いただけます。</p></div>
+      </div>
+      <div class="pp-faq-item">
+        <div class="pp-faq-q" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.chevron').style.transform=this.nextElementSibling.classList.contains('open')?'rotate(180deg)':'';">
+          <span class="q-icon">Q</span><span class="q-text">読経をお願いすることはできますか？</span><span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="pp-faq-a"><span class="a-icon">A</span><p>はい、お別れの時間に合わせて僧侶の手配が可能です。別途お布施が必要になります。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 他プラン提案 -->
+  <section class="pp-section" style="background:var(--pp-light)">
+    <div class="container">
+      <div class="pp-section-title" style="margin-bottom:24px;">
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">当プランを検討している方は</p>
+        <h2 style="font-size:1.3rem;">こちらのプランも検討しています</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="pp-other-plan-card">
+          <div style="height:100px;overflow:hidden;border-radius:4px;"><img src="../gmb-plans/public/images/S__58425360_0.jpg" alt="面会火葬式" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div style="font-size:10px;color:var(--pp-main);margin-top:8px;">PLAN 02</div>
+          <h4>面会火葬式</h4>
+          <div class="price"><span style="font-size:12px;color:var(--text-muted);">税込</span> 165,000<span style="font-size:14px;">円</span></div>
+        </div>
+        <div class="pp-other-plan-card">
+          <div style="height:100px;overflow:hidden;border-radius:4px;"><img src="../gmb-plans/public/images/祭壇（黄色）_25.JPG" alt="1日葬" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div style="font-size:10px;color:var(--pp-main);margin-top:8px;">PLAN 04</div>
+          <h4>1日葬</h4>
+          <div class="price"><span style="font-size:12px;color:var(--text-muted);">税込</span> 385,000<span style="font-size:14px;">円</span></div>
+        </div>
+      </div>
+      <a href="https://first-leaf.jp/plans/" style="display:block;text-align:center;margin-top:16px;padding:14px;background:var(--pp-main);color:#fff;font-weight:700;font-size:14px;border-radius:6px;">その他プラン一覧へ →</a>
+    </div>
+  </section>
+
+  <!-- CTA帯 3 -->
+  <section class="pp-cta-band">
+    <p class="cta-heading">後悔のないお見送りのために</p>
+    <p class="cta-sub">何から始めればいいかわからない方も、まずはご相談ください</p>
+    <div class="pp-cta-buttons">
+      <a href="tel:0467385617" class="pp-cta-btn-phone"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg> 0467-38-5617</a>
+      <a href="https://first-leaf.jp/contact/" target="_blank" rel="noopener noreferrer" class="pp-cta-btn-form"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg> フォームで問い合わせる</a>
+    </div>
+    <div class="pp-cta-discount">【公式サイト限定】事前相談で 10,000円割引 実施中</div>
+  </section>
+
+</div>
+
+<!-- ================================
+     FOOTER
+     ================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <div class="logo-mark">一</div>
+        <div>
+          <div class="logo-text">ファーストリーフ</div>
+          <div class="logo-sub">FIRST LEAF Inc.</div>
+        </div>
+      </div>
+      <div class="footer-tel-label">24時間365日受付・通話無料</div>
+      <a href="tel:0467385617" class="footer-tel-number">0467-38-5617</a>
+      <div class="footer-tel-time">お気軽にご相談ください</div>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-nav-group">
+        <h4>ご葬儀</h4>
+        <a href="/plans">ご葬儀プラン</a>
+        <a href="/plans#simple">シンプル直葬</a>
+        <a href="/plans#farewell">お別れ火葬式</a>
+        <a href="/plans#family">家族葬・自宅葬</a>
+      </div>
+      <div class="footer-nav-group">
+        <h4>施設案内</h4>
+        <a href="/facilities">斎場・火葬場案内</a>
+        <a href="/facilities#own">自社斎場</a>
+        <a href="/facilities#shonan">湘南エリア</a>
+        <a href="/facilities#yokohama">横浜市</a>
+      </div>
+      <div class="footer-nav-group">
+        <h4>サポート</h4>
+        <a href="/support">終活・トータルサポート</a>
+        <a href="/column">コラム・セミナー</a>
+        <a href="/contact#guidebook">ガイドブック請求</a>
+      </div>
+      <div class="footer-nav-group">
+        <h4>企業情報</h4>
+        <a href="/company">会社概要</a>
+        <a href="/company#staff">スタッフ紹介</a>
+        <a href="/contact">お問い合わせ</a>
+        <a href="/privacy">プライバシーポリシー</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 First Leaf Inc. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- SP CTA -->
+<div class="sp-fixed-cta">
+  <a href="tel:0467385617">
+    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+    24時間365日 今すぐ電話で相談する
+  </a>
+</div>
+
+<!-- ================================
+     SCRIPTS
+     ================================ -->
+<script>
+// Page Switcher
+const pageBtns = document.querySelectorAll('.page-switcher button');
+const pages = document.querySelectorAll('.page');
+const pageMap = { plans: 'page-plans', facility: 'page-facility', support: 'page-support', column: 'page-column', company: 'page-company', contact: 'page-contact', product03: 'page-product03' };
+
+pageBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    pageBtns.forEach(b => b.classList.remove('active'));
+    pages.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(pageMap[btn.dataset.page]).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Re-observe reveals for new page
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible)').forEach(el => revealObserver.observe(el));
+    }, 100);
+  });
+});
+
+// Area Tabs
+const areaTabs = document.querySelectorAll('.area-tab');
+const areaContents = document.querySelectorAll('.area-content');
+areaTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    areaTabs.forEach(t => t.classList.remove('active'));
+    areaContents.forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('area-' + tab.dataset.area).classList.add('active');
+  });
+});
+
+// View Toggle (カード ↔ テーブル)
+const viewBtns = document.querySelectorAll('.view-toggle button');
+viewBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    viewBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.view;
+    document.querySelectorAll('.area-content').forEach(area => {
+      const cardGrid = area.querySelector('.facility-card-grid');
+      const table = area.querySelector('.facility-table');
+      if (cardGrid && table) {
+        if (mode === 'card') {
+          cardGrid.style.display = '';
+          table.style.display = 'none';
+        } else {
+          cardGrid.style.display = 'none';
+          table.style.display = '';
+        }
+      }
+    });
+  });
+});
+
+// Column Filters (visual only)
+const colFilters = document.querySelectorAll('.column-filter');
+colFilters.forEach(f => {
+  f.addEventListener('click', () => {
+    colFilters.forEach(ff => ff.classList.remove('active'));
+    f.classList.add('active');
+  });
+});
+
+// Scroll Reveal
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
